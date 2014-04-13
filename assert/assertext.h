@@ -92,7 +92,7 @@
     std::cout << __STRING(max) <<" = " << max << std::endl;             \
     new_assert(value_a >= min && value_a <= max);                       \
   }														
-inline void assert_stream(std::fstream& in, 
+inline void assert_stream(std::ios& in, 
   const char* filename = "") {
   using namespace std;
   if(!in) {
