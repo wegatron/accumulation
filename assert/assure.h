@@ -17,7 +17,7 @@ inline void assure_stream(std::ios& zswios,
   const char* filename = "") {
   using namespace std;
   if(!zswios || !zswios.good()) {
-    cerr << "Could not open file %s\n" << string(filename) << endl;
+    cerr << "Could not open file " << string(filename) << endl;
     exit(1);
   }
 }
@@ -26,7 +26,7 @@ inline void assure_stream(std::ios& zswios,
                           const std::string& filename = "") {
   using namespace std;
   if(!zswios || !zswios.good()) {
-    cerr << "Could not open file %s\n" << filename << endl;
+    cerr << "Could not open file " << filename << endl;
     exit(1);
   }
 }
