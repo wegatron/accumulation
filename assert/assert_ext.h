@@ -91,16 +91,7 @@
     std::cout << __STRING(min) <<" = " << min << std::endl;             \
     std::cout << __STRING(max) <<" = " << max << std::endl;             \
     new_assert(value_a >= min && value_a <= max);                       \
-  }														
-inline void assert_stream(std::ios& in, 
-  const char* filename = "") {
-  using namespace std;
-  if(!in) {
-    fprintf(stderr,
-      "Could not open file %s\n", filename);
-    exit(1);
   }
-}
 
 #endif /* NDEBUG.  */
 
