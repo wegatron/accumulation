@@ -1,0 +1,53 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 0.8.3 ] */
+
+/* [wxMaxima: input   start ] */
+load("D:/deformable rigid dynamics/Cosserat/Quat.mac");
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+TEST_QUAT_BODY_FIXED(QT,VV,A):=
+block([WS,RR,RRX,denom,JRRX],
+      WS: ANG_VEL_QUAT_BODY_FIXED(QT,A),
+      RR: APPLY_QUAT(QT),
+      RRX: RR.VV,
+      denom: matrix(QT).matrix(QT),
+      JRRX: ratsimp(transpose(RR).jacobian([RRX[1],RRX[2],RRX[3]],[A])/denom),
+      ratsimp(trigsimp(CROSS(WS).VV-JRRX)));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+TEST_QUAT_BODY_FIXED([q1(A),q2(A),q3(A),q4(A)],transpose(matrix([0.3,0.77,0.125])),A);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+TEST_QUAT_REFERENCE(QT,VV,A):=
+block([WS,RR,RRX,denom,JRRX],
+      WS: ANG_VEL_QUAT_REFERENCE(QT,A),
+      RR: APPLY_QUAT(QT),
+      RRX: RR.VV,
+      denom: matrix(QT).matrix(QT),
+      JRRX: ratsimp(jacobian([RRX[1],RRX[2],RRX[3]],[A])),
+      ratsimp(trigsimp(CROSS(WS).RRX-JRRX)));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+TEST_QUAT_REFERENCE([q1(A),q2(A),q3(A),q4(A)],[1,0,0],A);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+TEST_COMPARE_FIXED_AND_REFERENCE(QT,VV,A):=
+block([RR,WSB,WSR,denom],
+      RR: APPLY_QUAT(QT),
+      WSB: ANG_VEL_QUAT_BODY_FIXED(QT,A),
+      WSR: ANG_VEL_QUAT_REFERENCE(QT,A),
+      denom: matrix(QT).matrix(QT),
+      ratsimp(transpose(RR).WSR/denom-WSB));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+TEST_COMPARE_FIXED_AND_REFERENCE([q1(A),q2(A),q3(A),q4(A)],[1.02,0.73,0.95],A);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

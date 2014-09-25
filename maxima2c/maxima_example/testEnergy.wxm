@@ -1,0 +1,243 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 0.8.3 ] */
+
+/* [wxMaxima: input   start ] */
+load("D:/deformable rigid dynamics/Cosserat/MaximaCode/Maxima/Energy.mac");
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+load("D:/deformable rigid dynamics/Cosserat/MaximaCode/Maxima/Energy.mac");
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+load("f90");
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+UI: [UI1,UI2,UI3];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+RI: [RI1(t),RI2(t),RI3(t)];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+RIN: [RIN1(t),RIN2(t),RIN3(t)];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+RIL: [RIL1(t),RIL2(t),RIL3(t)];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+QI: [QI1(t),QI2(t),QI3(t),QI4(t)];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+QIL: [QIL1(t),QIL2(t),QIL3(t),QIL4(t)];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+DRI_DT: block(J: jacobian(RI,[t]),[J[1,1],J[2,1],J[3,1]]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+DRIN_DT: block(J: jacobian(RIN,[t]),[J[1,1],J[2,1],J[3,1]]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+DRIL_DT: block(J: jacobian(RIL,[t]),[J[1,1],J[2,1],J[3,1]]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+DQI_DT: block(J: jacobian(QI,[t]),[J[1,1],J[2,1],J[3,1],J[4,1]]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+DQIL_DT: block(J: jacobian(QIL,[t]),[J[1,1],J[2,1],J[3,1],J[4,1]]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+COEF: [KS,KK1,KK2,KK3,CTT,CTR1,CTR2,CTR3,GT,GR,K];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+writeOptList(fn,M):=
+block([f],
+      f: openw(fn),
+      with_stdout(f,f90(optList(M))),
+      closew(f));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+concatRows(M1,M2):=
+block([ret],
+      ret: M1,
+      for i:1 thru matrix_size(M2)[1] do ret: addrow(ret,row(M2,i)),
+      ret);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+toList(M):=
+block([ret,i],
+      ret: [],
+      for i:1 thru matrix_size(M)[1] do 
+      for j:1 thru matrix_size(M)[2] do
+          ret: append(ret,[M[i,j]]),
+      ret);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+optList(M):= optimize(toList(M));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+extractCoef(DDT,P,DP,N):=
+block([SZ,ret,i],
+      SZ: length(P),
+      ret: zeromatrix(SZ,SZ+1),
+      for i:1 thru SZ do
+      block
+      (
+          [DD,j],
+          ret[i,SZ+1]: DDT[i],
+          for j:1 thru SZ do block
+                             (
+                                [DD],
+                                DD: diff(P[j],DP,N),
+                                ret[i,j]: coeff(expand(DDT[i]),DD,1),
+                                ret[i,SZ+1]: ret[i,SZ+1]-ret[i,j]*DD
+                             )
+      ),
+      ratsimp(ret));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+JacTT: 
+block([TTV,ARG,JTT,DJTT_DT],
+      TTV: ratsimp(TT(LI,COEF[5],DRIN_DT,DRI_DT)),
+      ARG: append(DRIN_DT,DRI_DT),
+      JTT: transpose(ratsimp(jacobian([TTV],ARG))),
+      DJTT_DT: [],
+      for i:1 thru 6 do DJTT_DT: append(DJTT_DT,[JTT[i,1]]),
+      DJTT_DT: ratsimp(jacobian(DJTT_DT,[t])),
+      [concatRows(matrix([TTV]),JTT),
+       extractCoef(toList(DJTT_DT),append(DRIN_DT,DRI_DT),t,1)]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+writeOptList("D:/deformable rigid dynamics/Cosserat/JacTT.f90",JacTT[1]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+writeOptList("D:/deformable rigid dynamics/Cosserat/JacTTDT.f90",JacTT[2]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+JacTR: 
+block([TRV,ARG,JTR,DJTR_DT],
+      TRV: ratsimp(TR(LI,LIL,[COEF[6],COEF[7],COEF[8]],QI,QIL,DQI_DT,DQIL_DT)),
+      ARG: append(QI,QIL,DQI_DT,DQIL_DT),
+      JTR: transpose(ratsimp(jacobian([TRV],ARG))),
+      DJTR_DT: [],
+      for i:1 thru 8 do DJTR_DT: append(DJTR_DT,[JTR[i+8,1]]),
+      DJTR_DT: ratsimp(jacobian(DJTR_DT,[t])),
+      [concatRows(matrix([TRV]),JTR),
+       extractCoef(toList(DJTR_DT),append(DQI_DT,DQIL_DT),t,1)]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+writeOptList ("D:/deformable rigid dynamics/Cosserat/JacTR.f90",JacTR[1]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+writeOptList ("D:/deformable rigid dynamics/Cosserat/JacTRDT.f90",JacTR[2]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+JacVS: 
+block([VSV,ARG,JVS],
+      VSV: ratsimp(VS(LI,COEF[1],RIN,RI)),
+      ARG: append(RIN,RI),
+      JVS: transpose(ratsimp(jacobian([VSV],ARG))),
+      concatRows(matrix([VSV]),JVS));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+writeOptList ("D:/deformable rigid dynamics/Cosserat/JacVS.f90",JacVS);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+JacVB: 
+block([VBV,ARG,JVB],
+      VBV: ratsimp(VB(LI,LIL,[COEF[2],COEF[3],COEF[4]],UI,QI,QIL)),
+      ARG: append(QI,QIL),
+      JVB: transpose(ratsimp(jacobian([VBV],ARG))),
+      concatRows(matrix([VBV]),JVB));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+writeOptList ("D:/deformable rigid dynamics/Cosserat/JacVB.f90",JacVB);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+JacEP: 
+block([EPV,ARG,JEP],
+      EPV: ratsimp(EP(LI,COEF[11],RIN,RI,QI)),
+      ARG: append(RIN,RI,QI),
+      JEP: transpose(ratsimp(jacobian([EPV],ARG))),
+      concatRows(matrix([EPV]),JEP));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+writeOptList ("D:/deformable rigid dynamics/Cosserat/JacEP.f90",JacEP);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+JacDT: 
+block([DTV,ARG,JDT],
+      DTV: ratsimp(DT(LI,COEF[9],RIN,RI,DRIN_DT,DRI_DT)),
+      ARG: append(RIN,RI,DRIN_DT,DRI_DT),
+      JDT: transpose(ratsimp(jacobian([DTV],ARG))),
+      concatRows(matrix([DTV]),JDT));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+writeOptList ("D:/deformable rigid dynamics/Cosserat/JacDT.f90",JacDT);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+JacDR:
+block([DRV,ARG,JDR],
+      DRV: ratsimp(DR(LI,LIL,COEF[10],QI,QIL,DQI_DT,DQIL_DT)),
+      ARG: append(QI,QIL,DQI_DT,DQIL_DT),
+      JDR: transpose(ratsimp(jacobian([DRV],ARG))),
+      concatRows(matrix([DRV]),JDR));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+writeOptList ("D:/deformable rigid dynamics/Cosserat/JacDR.f90",JacDR);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+TRI: TT(LI,COEF[5],DRIN_DT,DRI_DT)+
+     TT(LIL,COEF[5],DRI_DT,DRL_DT)+
+     TR(LI,LIL,[COEF[6],COEF[7],COEF[8]],QI,QIL,DQI_DT,DQIL_DT);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+VRI: VS(LI,COEF[1],RIN,RI)+
+     VS(LIL,COEF[1],RI,RIL)+
+     VB(LI,LIL,[COEF[2],COEF[3],COEF[4]],UI,QI,QIL)+
+     EP(LI,COEF[11],RIN,RI,QI)+
+     EP(LI,COEF[11],RI,RIL,QIL);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+DRI: DT(LI,COEF[9],RIN,RI,DRIN_DT,DRI_DT)+
+     DT(LIN,COEF[9],RI,RIL,DRI_DT,DRIL_DT)+
+     DR(LI,LIL,COEF[10],QI,QIL,DQI_DT,DQIL_DT);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

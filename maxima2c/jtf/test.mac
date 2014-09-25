@@ -1,0 +1,57 @@
+load(vect)$
+
+load(f90)$
+load("hj_flatten")$
+load("hj_fortran")$
+
+optimprefix:tt$
+
+flatten_jacobian(fx,x) := jacobian(hj_flatten(fx), hj_flatten(x))$
+
+R : genmatrix(R, 2, 2)$
+
+A : genmatrix(A, 2, 2)$
+
+test(M,k) :=
+        block(
+        [],
+        ratsimp(M*k)
+        )$
+
+test0(M) :=
+        block(
+        [],
+        ratsimp(M)
+        )$
+
+
+test1(M,A) :=
+        block(
+        [],
+        ratsimp(M+A)
+        )$
+
+test_jac(M,k) := flatten_jacobian(test(M,k), M);
+test0_jac(M) := flatten_jacobian(test0(M), M);
+test1_jac(M,A) := flatten_jacobian(test1(M,A), M);
+
+calc_test : optimize(test = test(R,k))$
+calc_test_jac : test_jac = test_jac(R,k)$ 
+
+calc_test0 : optimize(test0 = test0(R))$
+calc_test0_jac : test0_jac = test0_jac(R)$
+
+calc_test1 : optimize(test1 = test1(R,A))$
+calc_test1_jac : test1_jac = test1_jac(R,A)$
+
+f : openw("test.f")$
+
+with_stdout(f, to_fortran('calc_test0, calc_test0, ['test0, 'R]))$
+with_stdout(f, to_fortran('calc_test0_jac, calc_test0_jac, ['test0_jac, 'R]))$
+
+with_stdout(f, to_fortran('calc_test1, calc_test1, ['test1, 'R, 'A]))$
+with_stdout(f, to_fortran('calc_test1_jac, calc_test1_jac, ['test1_jac, 'R, 'A]))$
+
+with_stdout(f, to_fortran('calc_test, calc_test, ['test, 'R, 'k]))$
+with_stdout(f, to_fortran('calc_test_jac, calc_test_jac, ['test_jac, 'R, 'k]))$
+

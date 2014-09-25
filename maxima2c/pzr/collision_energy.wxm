@@ -1,0 +1,51 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: input   start ] */
+load("eigen");
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+load("vect");
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+load("f90");
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+collisionEnergy(x, c, r) :=
+block(
+[d,ret],
+d : matrix([x[3]-c[3], x[2]-c[2], x[1]-c[1]]),
+ret : (sqrt(d.d)-r) * (sqrt(d.d)-r),
+ratsimp(ret) 
+);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+jacCollisionEnergy(x, c, r) :=
+jacobian([collisionEnergy(x, c, r)], x);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+EvalJacCollisionEnergy(x, c, r) :=
+block([jacM, i, ret],
+jacM : jacCollisionEnergy(x, c, r),
+ret : [],
+for i:1 thru 9 do
+    ret: append(ret, jacM[1,i]),
+optimize(ret)
+);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+EvalCollisionEnergy(x, c, r) := optimize([collisionEnergy(x, c, r)]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+retE : f90(EvalCollisionEnergy([x1, x2, x3], [c1, c2, c3], r));
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

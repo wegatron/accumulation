@@ -1,0 +1,11 @@
+PROJECT(pze_maxima2c)
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
+SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -O3 -Wall")
+
+SET(APPNAME test)
+
+AUX_SOURCE_DIRECTORY(. application_name_src)
+
+ADD_EXECUTABLE(${APPNAME} ${application_name_src})

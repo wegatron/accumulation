@@ -1,0 +1,70 @@
+
+load("D:/deformable rigid dynamics/Cosserat/MaximaCode/Maxima/Quat.mac");
+
+SQR(A):= A*A;
+
+DISCRETIZE_QUAT(E,DQ_DA,AVGQ):=
+ev(E,
+   diff(q1(A),A)=DQ_DA[1],
+   diff(q2(A),A)=DQ_DA[2],
+   diff(q3(A),A)=DQ_DA[3],
+   diff(q4(A),A)=DQ_DA[4],
+   q1(A)=AVGQ[1],
+   q2(A)=AVGQ[2],
+   q3(A)=AVGQ[3],
+   q4(A)=AVGQ[4]);
+
+VS(LI,KS,RN,R):=
+block([DR_DS],
+      DR_DS: (RN-R)/LI,
+      0.5*LI*KS*SQR(sqrt(DR_DS.DR_DS)-1));
+
+VB(LI,LIL,K,U,QN,Q):=
+block([AV,ALI,W1,W2,W3],
+      AV: ANG_VEL_QUAT_BODY_FIXED([q1(A),q2(A),q3(A),q4(A)],A),
+	  ALI: (LI+LIL)*0.5,
+      W1:DISCRETIZE_QUAT(AV[1],(QN-Q)/ALI,(QN+Q)/2),
+      W2:DISCRETIZE_QUAT(AV[2],(QN-Q)/ALI,(QN+Q)/2),
+      W3:DISCRETIZE_QUAT(AV[3],(QN-Q)/ALI,(QN+Q)/2),
+      0.5*ALI*(K[1]*SQR(W1-U[1])+K[2]*SQR(W2-U[2])+K[3]*SQR(W3-U[3])));
+
+TT(LI,M,DRN_DT,DR_DT):=
+block([AVG_DDR],
+      AVG_DR: (DRN_DT+DR_DT)/2,
+      0.5*M*LI*(AVG_DR.AVG_DR));
+
+TR(LI,LIL,K,QN,Q,DQN_DT,DQ_DT):=
+block([AV,W1,W2,W3,ALI],
+      AV: ANG_VEL_QUAT_BODY_FIXED([q1(A),q2(A),q3(A),q4(A)],A),
+      W1: DISCRETIZE_QUAT(AV[1],(DQN_DT+DQ_DT)/2,(QN+Q)/2),
+      W2: DISCRETIZE_QUAT(AV[2],(DQN_DT+DQ_DT)/2,(QN+Q)/2),
+      W3: DISCRETIZE_QUAT(AV[3],(DQN_DT+DQ_DT)/2,(QN+Q)/2),
+      ALI: (LI+LIL)*0.5,
+	  0.5*ALI*(K[1]*SQR(W1)+K[2]*SQR(W2)+K[3]*SQR(W3)));
+
+DT(LI,GT,RN,R,DRN_DT,DR_DT):=
+block([DR_DS_DT,DR_DS,VREL],
+      DR_DS_DT: (DRN_DT-DR_DT)/LI,
+      DR_DS: (RN-R)/LI,
+      VREL: DR_DS*(DR_DS_DT.DR_DS),
+      0.5*LI*GT*(VREL.VREL));
+
+DR(LI,LIL,GR,QN,Q,DQN_DT,DQ_DT):=
+block([AV,W1N,W2N,W3N,W1,W2,W3,ALI],
+      AV: ANG_VEL_QUAT_REFERENCE([q1(A),q2(A),q3(A),q4(A)],A),
+      W1N:DISCRETIZE_QUAT(AV[1],DQN_DT,QN),
+      W2N:DISCRETIZE_QUAT(AV[2],DQN_DT,QN),
+      W3N:DISCRETIZE_QUAT(AV[3],DQN_DT,QN),
+      W1:DISCRETIZE_QUAT(AV[1],DQ_DT,Q),
+      W2:DISCRETIZE_QUAT(AV[1],DQ_DT,Q),
+      W3:DISCRETIZE_QUAT(AV[1],DQ_DT,Q),
+	  ALI: (LI+LIL)*0.5,
+      VREL:([W1N,W2N,W3N]-[W1,W2,W3])/ALI,
+      0.5*ALI*GR*(VREL.VREL));
+
+EP(LI,K,RN,R,Q):=
+block([RR,D3,RNOR],
+	  RR: APPLY_QUAT(Q),
+	  D3: RR.transpose(matrix([0,0,1])),
+	  RNOR: (RN-R)/sqrt((RN-R).(RN-R)),
+	  0.5*LI*K*((RNOR-D3).(RNOR-D3)));
