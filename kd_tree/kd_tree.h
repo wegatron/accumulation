@@ -32,6 +32,10 @@ namespace zsw{
 
   void nearestSearch(const std::vector<KdTreeNode> &kdtree, const int root,
                      double val[], int &nearest, double &squared_dis);
+
+  /* void nearestNSearch(const std::vector<KdTreeNode> &kdtree, const int root, */
+  /*                     double val[], std::vector<int> &nearest_n, */
+  /*                     std::vector<double> &squared_dis_n); */
 }
 
 

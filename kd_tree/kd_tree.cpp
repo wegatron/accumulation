@@ -176,3 +176,10 @@ void zsw::nearestSearch(const vector<KdTreeNode> &kdtree, const int root,
     }
   }
 }
+
+// void zsw::nearestNSearch(const std::vector<KdTreeNode> &kdtree, const int root,
+//                       double val[], std::vector<int> &nearest_n,
+//                       std::vector<double> &squared_dis_n)
+// {
+
+// }
