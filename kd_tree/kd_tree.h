@@ -7,26 +7,31 @@
 namespace zsw{
   struct KdTreeNode{
     double p[2];
-    std::size_t left;
-    std::size_t right;
-    std::size_t split;
+    int left;
+    int right;
+    int split;
   };
 
   typedef std::vector<KdTreeNode*> Part;
 
   double cacuVariance(const std::vector<double> &val);
 
-  double cacuRootSplit(const Part &unsolved, KdTreeNode* &root, std::size_t &split_dim);
+  double cacuRootSplit(const Part &unsolved, KdTreeNode* &root, int &split_dim);
 
-  std::size_t solve(const std::pair<Part*, std::size_t*> &tmp, const KdTreeNode *first_ptr,
-               std::queue<std::pair<Part*, std::size_t*> > &unsolved_queue);
+  int solve(const std::pair<Part*, int*> &tmp, const KdTreeNode *first_ptr,
+               std::queue<std::pair<Part*, int*> > &unsolved_queue);
 
-  std::size_t makeKdTree(const double* val[], const std::size_t size,
-                    const std::size_t dim, std::vector<KdTreeNode> &kdtree);
+  int makeKdTree(const double* val[], const int size,
+                    const int dim, std::vector<KdTreeNode> &kdtree);
 
-  void inOrderTraverse(std::vector<KdTreeNode> &kdtree, std::size_t root);
+  void inOrderTraverse(std::vector<KdTreeNode> &kdtree, int root);
 
-  void preOrderTraverse(std::vector<KdTreeNode> &kdtree, std::size_t root);
+  void preOrderTraverse(std::vector<KdTreeNode> &kdtree, int root);
+
+  double cacuSquaredDis(const double *val0, const double *val1);
+
+  void nearestSearch(const std::vector<KdTreeNode> &kdtree, const int root,
+                     double val[], int &nearest, double &squared_dis);
 }
 
 

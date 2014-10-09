@@ -1,29 +1,61 @@
-PROJECT(zsw_log)
+cmake_minimum_required(VERSION 2.6)
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+set(CMAKE_MODULE_PATH "$ENV{HOME}/usr/share/cmake/Modules/;${CMAKE_MODULE_PATH}")
 
-SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -O3 -Wall")
+project(zsw_log)
+
+set(APPNAME zsw_log)
+
+include($ENV{HOME}/usr/share/cmake/Modules/geo_sim_sdk.cmake)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+include_geo_sim_sdk()
+link_geo_sim_sdk()
+
+set(CMAKE_C_FLAGS "$ENV{CFLAGS} -O3")
+set(CMAKE_CXX_FLAGS "-std=c++0x -fPIC -fopenmp ${CMAKE_CXX_FLAGS}")
+
+###
+##FIND_PACKAGE
+###
 
 set(Boost_USE_STATIC_LIBS        ON)
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
-# find_package( Boost COMPONENTS filesystem system unit_test_framework REQUIRED)
 
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 else(Boost_FOUND)
   message("CAN NOT FIND BOOST")
 endif(Boost_FOUND)
-# link   ${Boost_LIBRARIES}  Boost_UNIT_TEST_FRAMEWORK_LIBRARY
 
+# add_subdirectory(src)
 
+# file(GLOB source *.cpp)
 
-SET(APPNAME test)
+add_library(zswlog zsw_log.h zsw_log.cpp)
 
-AUX_SOURCE_DIRECTORY(. test_src)
+add_executable(test test.cpp)
 
-ADD_EXECUTABLE(${APPNAME} ${test_src})
-
-TARGET_LINK_LIBRARIES( ${APPNAME}
-
+target_link_libraries( test
+  zswlog
   )
+
+
+install(DIRECTORY include/
+  DESTINATION include/
+  FILES_MATCHING PATTERN "**.h" REGEX ".svn.*" EXCLUDE)
+
+# add_library_from_dir(name mode dir)
+# add_executable_from_dir(name dir)
+
+## install header
+# install(DIRECTORY include/
+#   DESTINATION include/
+#   FILES_MATCHING PATTERN "**.h" REGEX ".svn.*" EXCLUDE)
+
+#install bin or library in /os/bit/compiler/
+geo_sim_sdk_install_cxx(TARGETS zswlog)
+
+## install bin or library in /os/bit/
+# geo_sim_sdk_install_c(TARGET name)
