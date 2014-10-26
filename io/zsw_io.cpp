@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int zsw::readTexture(const string &path, std::map<int,int> &texture_map, Eigen::Matrix<double, 2, -1> &texture_points)
+int zsw::obj::readTexture(const string &path, std::map<int,int> &texture_map, Eigen::Matrix<double, 2, -1> &texture_points)
 {
   ifstream ifs(path);
   if(!ifs) {
@@ -50,7 +50,7 @@ int zsw::readTexture(const string &path, std::map<int,int> &texture_map, Eigen::
   return 0;
 }
 
-int zsw::readNormal(const std::string &path, std::map<int,int> &normal_map,
+int zsw::obj::readNormal(const std::string &path, std::map<int,int> &normal_map,
                     Eigen::Matrix<double, 3, -1> &normals)
 {
   ifstream ifs(path);
@@ -95,7 +95,7 @@ int zsw::readNormal(const std::string &path, std::map<int,int> &normal_map,
   return 0;
 }
 
-int zsw::readObjBasic(const std::string &path, Eigen::Matrix<double,3,-1> &vertexes,
+int zsw::obj::readObjBasic(const std::string &path, Eigen::Matrix<double,3,-1> &vertexes,
                       Eigen::Matrix<int,3,-1> &faces)
 {
   ifstream ifs(path);
@@ -140,7 +140,7 @@ int zsw::readObjBasic(const std::string &path, Eigen::Matrix<double,3,-1> &verte
   return 0;
 }
 
-int zsw::writeObjMesh(const string &path, const Eigen::Matrix<double,3,-1> &vertexes,
+int zsw::obj::writeObjMesh(const string &path, const Eigen::Matrix<double,3,-1> &vertexes,
                       const Eigen::Matrix<int,3,-1> &faces,
                       const Eigen::Matrix<double,3,-1> *normals,
                       const map<int,int> *normal_map,

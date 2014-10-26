@@ -9,6 +9,7 @@
 
 namespace zsw{
 
+  namespace obj{
   /**
    *!!!Be careful, the Eigen Matrix must store in column-major(default storage major).
    */
@@ -33,6 +34,7 @@ namespace zsw{
                    const std::string *mtl_file=NULL, const std::string *mtl_name=NULL,
                    const Eigen::Matrix<double, 2, -1> *texture_points=NULL,
                    const std::map<int,int> *texture_map=NULL);
+  }
 
 }
 
