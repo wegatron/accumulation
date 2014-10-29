@@ -11,7 +11,7 @@ namespace zsw{
   public:
     static boost::shared_ptr<ZswLog> getInstance(){
       if(p_instance == NULL){
-         p_instance = boost::shared_ptr<ZswLog>(new ZswLog());
+        p_instance = boost::shared_ptr<ZswLog>(new ZswLog());
       }
       return p_instance;
     }
@@ -27,6 +27,13 @@ namespace zsw{
     static boost::shared_ptr<ZswLog> p_instance;
   };
   typedef boost::shared_ptr<ZswLog> pZswLog;
+
+#define LOG(log_type, info) do{                 \
+    pZswLog log = zsw::ZswLog::getInstance();   \
+    log->log(log_type, info);                    \
+  }while(0)
+
 }//end of namespace
+
 
 #endif /*ZSW_LOG_H*/
