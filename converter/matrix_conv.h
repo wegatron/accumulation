@@ -2,6 +2,9 @@
 #define MATRIX_CONV_H
 
 #include <vector>
+
+#include <assert.h>
+
 #include <Eigen/Dense>
 #include <zjucad/matrix/matrix.h>
 
@@ -89,6 +92,21 @@ namespace zsw{
     B.reserve(nnz(A));
     B.setFromTriplets(vec.begin(), vec.end());
     B.makeCompressed();
+  }
+
+  template<typename VAL_TYPE>
+  void vec2Zjumat3n(const std::vector<VAL_TYPE> &vec, zjucad::matrix::matrix<VAL_TYPE> &zju_mat)
+  {
+    assert(vec.size()%3==0);
+    zju_mat.resize(3, vec.size()/3);
+    std::copy(vec.begin(), vec.end(), zju_mat.begin());
+  }
+
+  template<typename VAL_TYPE>
+  void zjumat3n2Vec(const zjucad::matrix::matrix<VAL_TYPE> &zju_mat, std::vector<VAL_TYPE> &vec)
+  {
+      vec.resize(zju_mat.size(1)*zju_mat.size(2));
+      std::copy(zju_mat.begin(), zju_mat.end(), vec.begin());
   }
 }
 

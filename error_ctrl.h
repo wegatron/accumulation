@@ -58,7 +58,7 @@
     }                                                                   \
   }while(0)
 
-#define ASSURE1(cond, err_hnd) do {                                     \
+#define ASSURE(cond, err_hnd) do {                                     \
     if(!(cond)) {                                                       \
       std::cerr << "# [ERROR] condition " << #cond << " not satisfied!" << std::endl; \
         PRINT_BACKTRACE();                                              \
@@ -66,12 +66,10 @@
     }                                                                   \
   } while(0)
 
-#define ASSURE2(cond, err_hnd) do {                                     \
-    if(!(cond)) {                                                       \
-      std::cerr << "# [ERROR] condition " << #cond << " not satisfied!" << std::endl; \
-        PRINT_BACKTRACE();                                              \
-        err_hnd;                                                        \
-    }                                                                   \
+#define ASSURE_MSG(cond, msg, err_hnd) do {     \
+    if(!(cond)) {                               \
+      zsw::LOG(msg);                            \
+      err_hnd;                                  \
+    }                                           \
   }while(0)
-
 #endif /* ERROR_CTRL_H */
