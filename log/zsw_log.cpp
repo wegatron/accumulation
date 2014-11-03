@@ -9,10 +9,15 @@
 using namespace std;
 using namespace zsw;
 
+#ifdef WIN32
+static const string log_path_prefix="C:\\users\\wegatron\\AppData\\Local\\Temp\\zswlog";
+#else
 static const string log_path_prefix="/tmp/zswlog";
-static const int log_type_size = 1;
+#endif /* WIN32 */
+
 static pair<string, int> log_types[] = {
-  pair<string, int>("zsw_log",1)
+  pair<string, int>("zsw_info",1),
+  pair<string, int>("zsw_err",1)
 };
 
 pZswLog ZswLog::p_instance;
@@ -31,10 +36,11 @@ static string getTime()
 
 void zsw::ZswLog::init()
 {
-  for (int i=0; i<log_type_size; ++i) {
-    log_type_map.insert(log_types[i]);
+  int log_type_size = sizeof(log_types)/sizeof(pair<string,int>);
+  for (int i=0; i<log_type_size; ++i)
+  {
+	  log_type_map.insert(log_types[i]);
   }
-
   string file_path = log_path_prefix + ".log";
   ofs.open(file_path.c_str(), std::fstream::app);
   if(!ofs || !ofs.good()) {
@@ -48,6 +54,6 @@ void zsw::ZswLog::log(const string &log_type, const string& info)
   if (!ofs || !ofs.good() || it == log_type_map.end() || it->second==0) {
     return;
   }
-  cout <<  getTime() << info << endl;
-  ofs << getTime() << info << endl;
+  cout << "# [" << log_type << "] " << getTime() << info << endl;
+  ofs << "# [" << log_type << "] "<< getTime() << info << endl;
 }

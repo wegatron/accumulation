@@ -5,6 +5,8 @@
 #include <fstream>
 #include <boost/shared_ptr.hpp>
 
+#define ZSW_LOG_ACTIVE
+
 namespace zsw{
 
   class ZswLog{
@@ -28,12 +30,15 @@ namespace zsw{
   };
   typedef boost::shared_ptr<ZswLog> pZswLog;
 
-#define LOG(log_type, info) do{                 \
-    pZswLog log = zsw::ZswLog::getInstance();   \
-    log->log(log_type, info);                    \
-  }while(0)
-
 }//end of namespace
 
+#ifdef ZSW_LOG_ACTIVE
+#define ZSWLOG(log_type, info) do{                      \
+    zsw::pZswLog log = zsw::ZswLog::getInstance();      \
+    log->log(log_type, info);                           \
+  }while(0)
+#else
+#define ZSWLOG(log_type, info)
+#endif /* ZSW_LOG_ACTIVE */
 
 #endif /*ZSW_LOG_H*/
