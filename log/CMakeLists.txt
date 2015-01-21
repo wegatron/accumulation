@@ -13,7 +13,7 @@ include_geo_sim_sdk()
 link_geo_sim_sdk()
 
 set(CMAKE_C_FLAGS "$ENV{CFLAGS} -O3")
-set(CMAKE_CXX_FLAGS "-std=c++0x -fPIC -fopenmp ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++11 -fPIC -fopenmp ${CMAKE_CXX_FLAGS}")
 
 ###
 ##FIND_PACKAGE
