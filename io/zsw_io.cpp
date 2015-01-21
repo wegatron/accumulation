@@ -4,6 +4,12 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <algorithm>
+#include <cctype>
+
+#include <ctype.h>
+
+#include <boost/algorithm/string.hpp>
 
 using namespace std;
 
@@ -207,3 +213,133 @@ int zsw::obj::writeObjMesh(const string &path, const Eigen::Matrix<double,3,-1> 
   ofs.close();
   return 0;
 }
+
+int zsw::fileType(const std::string &path)
+{
+  ifstream ifs(path);
+  if(!ifs) {
+    cerr << "can not open file: " << path << "for read!" << endl;
+    return __LINE__;
+  }
+  char c;
+  int type = FileType::text;
+
+  while(ifs.get(c)) {
+    if (!isascii(c) ||
+        (iscntrl(c) && !isspace(c) &&
+         c != '\b' && c != '\032' && c != '\033' && c != '\0'
+         )
+        )
+      type=FileType::binary;	/* not all ASCII */
+  }
+  ifs.close();
+  return type;
+}
+
+int zsw::load_stl_binary(const std::string &path, zjucad::matrix::matrix<int> &tris,
+                         zjucad::matrix::matrix<double> &vertex)
+{
+  ifstream ifs(path, std::fstream::in & std::fstream::binary);
+  if(!ifs) {
+    cerr << "can not open file: " << path << "for read!" << std::endl;
+    return __LINE__;
+  }
+  char buffer[100];
+  ifs.read(buffer, 80);
+  unsigned int num_tris;
+  // uint32_t num_tris;
+  read_binary(ifs, num_tris);
+  std::cout << "number of tris:" << num_tris << std::endl;
+  tris.resize(3,num_tris);
+  std::size_t cnt=0;
+  for(zjucad::matrix::matrix<int>::iterator it = tris.begin();
+      it!= tris.end(); ++it, ++cnt) {
+    *it = cnt;
+  }
+  vertex.resize(3, 3*num_tris);
+  float fvalue[3];
+  for(std::size_t i=0; i<num_tris; ++i) {
+    ifs.read((char*)fvalue, 3*sizeof(float)); // read normal
+    ifs.read((char*)fvalue, 3*sizeof(float)); std::copy(fvalue, fvalue+3,&vertex(0,i*3));
+    ifs.read((char*)fvalue, 3*sizeof(float)); std::copy(fvalue, fvalue+3,&vertex(0,i*3+1));
+    ifs.read((char*)fvalue, 3*sizeof(float)); std::copy(fvalue, fvalue+3,&vertex(0,i*3+2));
+    ifs.read(buffer, 2);
+  }
+  ifs.close();
+  return 0;
+}
+
+static void analysis_stl_ascii(std::istream &ifs, std::size_t &tri_num)
+{
+  string buffer;
+  while(!ifs.eof()) {
+    buffer.clear();
+    getline(ifs, buffer);
+    boost::trim(buffer);
+    if(boost::starts_with(buffer,"outer loop")) {
+      ++tri_num;
+    }
+  }
+  ifs.clear();
+  ifs.seekg(0,ifs.beg);
+}
+
+int zsw::load_stl_ascii(const std::string &path, zjucad::matrix::matrix<int> &tris,
+                        zjucad::matrix::matrix<double> &vertex)
+{
+  ifstream ifs(path, fstream::in);
+  if(!ifs) {
+    std::cerr << "can not open file: " << path << "for read!" << std::endl;
+    return __LINE__;
+  }
+  std::size_t tri_num=0;
+  analysis_stl_ascii(ifs, tri_num);
+  std::cerr << "tris num:" << tri_num << std::endl;
+  tris.resize(3, tri_num);
+  std::size_t cnt=0;
+  for(zjucad::matrix::matrix<int>::iterator it = tris.begin();
+      it!= tris.end(); ++it, ++cnt) {
+    *it = cnt;
+  }
+
+  vertex.resize(3, 3*tri_num);
+
+  std::string buffer;
+  for(cnt=0; !ifs.eof();) {
+    getline(ifs, buffer);
+    boost::trim(buffer);
+    if(buffer.find("vertex")==0) {
+      buffer.erase(0, 6);
+      stringstream ss(buffer);
+      ss>> vertex[cnt] >> vertex[cnt+1] >> vertex[cnt+2];
+      cnt+=3;
+    }
+  }
+  return 0;
+}
+
+int zsw::load_stl(const std::string &path, zjucad::matrix::matrix<int> &tris,
+                  zjucad::matrix::matrix<double> &vertex)
+{
+  int ret = zsw::fileType(path);
+  if(ret == zsw::FileType::text) {
+    std::cout << "Load text stl file " << path << std::endl;
+    zsw::load_stl_ascii(path,tris, vertex);
+  } else if(ret == zsw::FileType::binary) {
+    std::cout << "Load binary stl file " << path << std::endl;
+    zsw::load_stl_binary(path,tris, vertex);
+  } else {
+    std::cout << "can not open file " << path << " for read!" << std::endl;
+    return __LINE__;
+  }
+  return 0;
+}
+
+// std::string& zsw::trim(std::string& str)
+// {
+//   str.erase(str.begin(), std::find_if(str.begin(), str.end(),
+//                                  [](char& ch)->bool { return !isspace(ch); }));
+//   str.erase(find_if(str.rbegin(), str.rend(),
+//                     [](char& ch)->bool { return !isspace(ch); }).base(), str.end());
+//   return str;
+// }
