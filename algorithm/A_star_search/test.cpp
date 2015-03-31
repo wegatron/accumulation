@@ -1,6 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include <memory>
 #include <list>
+
+#include "A_star_search.h"
 
 using namespace std;
 
@@ -16,15 +19,23 @@ const int dis_map[9][9] = {
   {4,3,2,3,2,1,2,1,0}
 };
 
-const int start_state[9] = {8,3,5,1,2,7,4,6,0};
-const int target_state[9] = {1,2,3,4,5,6,7,8,0};
+int start_state[9];
+int target_state[9];
 
 struct Node{
   int state[9];
-  int h_dis;
   int g_dis;
+  int h_dis;
+  char mv;
   shared_ptr<Node> pre;
 };
+
+bool state_equal(const int a[], const int b[]) {
+  for( int i=0; i<9; ++i) {
+    if(a[i]!=b[i]) return false;
+  }
+  return true;
+}
 
 int cal_h(const int from[], const int target[]) {
   int h_dis = 0;
@@ -46,28 +57,19 @@ void insert_ascending(list<shared_ptr<Node> > &node_list, shared_ptr<Node> &new_
 Node * find_state(list<shared_ptr<Node> > &node_list, const int state[])
 {
   for(shared_ptr<Node> &tmp_node : node_list) {
-    int i=0;
-    for(; i<9; ++i) {
-      if(state[i]!=tmp_node->state[i]) break;
-    }
-    if(i == 9) {
-      return tmp_node.get();
-    }
+    if(state_equal(tmp_node->state, state)) return tmp_node.get();
   }
   return nullptr;
 }
 
-bool check_insert(shared_ptr<Node> &cur, int state[], list<shared_ptr<Node> > &open, list<shared_ptr<Node> > &close)
+bool check_insert(shared_ptr<Node> &cur, int state[], list<shared_ptr<Node> > &open, list<shared_ptr<Node> > &close, char mv)
 {
-  int i=0;
-  for(; i<9; ++i) {
-    if(state[i] != target_state[i]) break;
-  }
-  if(i ==9) {
+  if(state_equal(state, target_state)) {
     shared_ptr<Node> new_node(new Node());
     new_node->h_dis = 0;
     new_node->g_dis = cur->g_dis+1;
     new_node->pre = cur;
+    new_node->mv = mv;
     copy(state, state+9, new_node->state);
     close.push_back(new_node);
     return true;
@@ -79,17 +81,49 @@ bool check_insert(shared_ptr<Node> &cur, int state[], list<shared_ptr<Node> > &o
       new_node->h_dis = cal_h(state, target_state);
       new_node->g_dis = cur->g_dis+1;
       new_node->pre = cur;
+      new_node->mv = mv;
       copy(state, state+9, new_node->state);
       insert_ascending(open, new_node);
     } else if(tmp_node->g_dis > cur->g_dis + 1) {
       tmp_node->g_dis = cur->g_dis+1;
       tmp_node->pre = cur;
+      tmp_node->mv = mv;
     }
   }
   return false;
 }
-bool relax(list<shared_ptr<Node> > &open,
-           list<shared_ptr<Node> > &close)
+
+bool move(shared_ptr<Node> &cur, int tmp_state[], const int zero_pos, list<shared_ptr<Node> > &open,
+          list<shared_ptr<Node> > &close)
+{
+  if(zero_pos>2) {
+    // move up
+    swap(tmp_state[zero_pos], tmp_state[zero_pos-3]);
+    if(check_insert(cur,tmp_state, open, close, 'u')) return true;
+    swap(tmp_state[zero_pos], tmp_state[zero_pos-3]);
+  }
+  if(zero_pos<6) {
+    // move down
+    swap(tmp_state[zero_pos], tmp_state[zero_pos+3]);
+    if(check_insert(cur,tmp_state, open, close,'d')) return true;
+    swap(tmp_state[zero_pos], tmp_state[zero_pos+3]);
+  }
+  if(zero_pos!=0 && zero_pos!=3 && zero_pos!=6) {
+    // move left
+    swap(tmp_state[zero_pos], tmp_state[zero_pos-1]);
+    if(check_insert(cur,tmp_state, open, close,'l')) return true;
+    swap(tmp_state[zero_pos], tmp_state[zero_pos-1]);
+  }
+  if(zero_pos!=2 && zero_pos!=5 && zero_pos!=8) {
+    // move right
+    swap(tmp_state[zero_pos], tmp_state[zero_pos+1]);
+    if(check_insert(cur,tmp_state, open, close,'r')) return true;
+    swap(tmp_state[zero_pos], tmp_state[zero_pos+1]);
+  }
+  return false;
+}
+
+bool relax(list<shared_ptr<Node> > &open, list<shared_ptr<Node> > &close)
 {
   shared_ptr<Node> cur = *(open.begin());
   open.erase(open.begin()); close.push_back(cur);
@@ -97,31 +131,13 @@ bool relax(list<shared_ptr<Node> > &open,
   for(; cur->state[zero_pos]!=0; ++zero_pos);
   int tmp_state[9]; copy(cur->state, cur->state+9, tmp_state);
   // cur move up, down, left, right
-  if(zero_pos>2) {
-    // move up
-    swap(tmp_state[zero_pos], tmp_state[zero_pos-3]);
-    if(check_insert(cur,tmp_state, open, close)) return true;
-    swap(tmp_state[zero_pos], tmp_state[zero_pos-3]);
-  }
-  if(zero_pos<6) {
-    // move down
-    swap(tmp_state[zero_pos], tmp_state[zero_pos+3]);
-    if(check_insert(cur,tmp_state, open, close)) return true;
-    swap(tmp_state[zero_pos], tmp_state[zero_pos+3]);
-  }
-  if(zero_pos!=0 && zero_pos!=3 && zero_pos!=6) {
-    // move left
-    swap(tmp_state[zero_pos], tmp_state[zero_pos-1]);
-    if(check_insert(cur,tmp_state, open, close)) return true;
-    swap(tmp_state[zero_pos], tmp_state[zero_pos-1]);
-  }
-  if(zero_pos!=2 && zero_pos!=5 && zero_pos!=8) {
-    // move right
-    swap(tmp_state[zero_pos], tmp_state[zero_pos+1]);
-    if(check_insert(cur,tmp_state, open, close)) return true;
-    swap(tmp_state[zero_pos], tmp_state[zero_pos+1]);
-  }
-  return false;
+  return move(cur, tmp_state, zero_pos, open, close);
+}
+
+void print_state(int state[]) {
+  cout <<  state[0] << state[1] << state[2] << endl;
+  cout <<  state[3] << state[4] << state[5] << endl;
+  cout <<  state[6] << state[7] << state[8] << endl;
 }
 
 int main(int argc, char *argv[])
@@ -129,9 +145,16 @@ int main(int argc, char *argv[])
   list<shared_ptr<Node> > open;
   list<shared_ptr<Node> > close;
 
+  string file_path;
+  cin >> file_path;
+  ifstream ifs(file_path);
+  for(int i=0; i<9; ++i) ifs>>start_state[i];
+  for(int i=0; i<9; ++i) ifs>>target_state[i];
+
   shared_ptr<Node> start_node(new Node());
   start_node->h_dis = cal_h(start_state, target_state);
   start_node->g_dis = 0; start_node->pre = nullptr;
+  start_node->mv = 'x';
   copy(start_state, start_state+9, start_node->state);
 
   open.push_back(start_node);
@@ -140,10 +163,8 @@ int main(int argc, char *argv[])
   }
   shared_ptr<Node> tmp_node = close.back();
   do {
-    for(int i=0; i<9; ++i) {
-      cout << tmp_node->state[i] << " ";
-    }
-    cout << endl;
+    print_state(tmp_node->state);
+    cout << tmp_node->mv << endl;
     tmp_node = tmp_node->pre;
   } while(tmp_node!=nullptr);
   return 0;
