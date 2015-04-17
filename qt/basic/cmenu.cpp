@@ -8,9 +8,9 @@ using namespace std;
 
 void CMenu::addItem(const QString &text)
 {
-  QPushButton *button = new QPushButton(text, parent_);
-  button->hide();
+  QPushButton *button = new QPushButton(text, parent_);  button->hide();
   button_list_.push_back(button);
+  connect(button, SIGNAL(released()), this, SLOT(hide()));
 }
 
 void CMenu::show(const QPoint &pos)

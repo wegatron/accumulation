@@ -26,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::ShowContextMenu(const QPoint &pos)
 {
-  // std::cout << "!!!!" << std::endl;
   cmenu_.show(pos);
 }
 

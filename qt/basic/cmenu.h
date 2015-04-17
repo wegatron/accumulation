@@ -3,15 +3,18 @@
 
 #include <QList>
 #include <QPushButton>
+#include <QObject>
 
-class CMenu
+class CMenu : public QObject
 {
+  Q_OBJECT
 public:
  CMenu(QWidget *parent, double radius=100) : parent_(parent), radius_(radius) {}
   void setParent(QWidget *parent) { parent_ = parent; }
   void setRadius(const double radius) { radius_ = radius; }
   void addItem(const QString &text);
   void show(const QPoint &pos);
+public slots:
   void hide();
 private:
   QList<QPushButton*> button_list_;
