@@ -1,0 +1,4 @@
+install(DIRECTORY libremesh/ DESTINATION include/sxxlib/remesh
+  FILES_MATCHING PATTERN "*.h"
+  PATTERN .svn EXCLUDE
+  PERMISSIONS GROUP_READ WORLD_READ)
