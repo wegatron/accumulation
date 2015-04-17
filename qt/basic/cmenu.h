@@ -7,7 +7,7 @@
 class CMenu
 {
 public:
- CMenu(QWidget *parent, double radius=50) : parent_(parent), radius_(radius) {}
+ CMenu(QWidget *parent, double radius=100) : parent_(parent), radius_(radius) {}
   void setParent(QWidget *parent) { parent_ = parent; }
   void setRadius(const double radius) { radius_ = radius; }
   void addItem(const QString &text);

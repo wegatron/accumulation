@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+using namespace std;
+
 #define PI 3.1415926
 
 void CMenu::addItem(const QString &text)
@@ -13,13 +15,14 @@ void CMenu::addItem(const QString &text)
 
 void CMenu::show(const QPoint &pos)
 {
-  std::cout << "show on " << pos.x() << "  " << pos.y() << std::endl;
+  // std::cout << "show on " << pos.x() << "  " << pos.y() << std::endl;
   size_t n = button_list_.size();
   double step = 2*PI/n;
   double angle = PI/2;
   for(size_t i =0; i<button_list_.size(); ++i) {
     button_list_[i]->setGeometry(pos.x()+radius_*cos(angle), pos.y()+radius_*sin(angle), 50, 25);
     button_list_[i]->show();
+    angle+= step;
   }
 }
 
