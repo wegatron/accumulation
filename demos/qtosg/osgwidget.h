@@ -4,10 +4,10 @@
 #include <QtOpenGL>
 #include <osgViewer/GraphicsWindow>
 #include <osgViewer/Viewer>
+#include "text_camera.h"
 
 class OSGWidget : public QGLWidget
 {
-  //  Q_OBJECT
  public:
   OSGWidget(QWidget *parent);
   osg::ref_ptr<osgViewer::Viewer> getViewer() { return viewer_; }
@@ -22,6 +22,7 @@ class OSGWidget : public QGLWidget
   virtual bool event( QEvent* event );
 
  private:
+  text_camera tc_;
   osgGA::EventQueue* getEventQueue() const;
   osg::ref_ptr<osgViewer::Viewer> viewer_;
   osg::ref_ptr<osgViewer::GraphicsWindowEmbedded> graphics_window_;

@@ -5,7 +5,6 @@
 #include <osgDB/ReadFile>
 #include <osgGA/OrbitManipulator>
 
-
 OSGWidget::OSGWidget(QWidget *parent) : QGLWidget(parent)
 {
   viewer_ = new osgViewer::Viewer;
@@ -19,6 +18,7 @@ OSGWidget::OSGWidget(QWidget *parent) : QGLWidget(parent)
   osgGA::OrbitManipulator *manipulator =  new osgGA::OrbitManipulator;
   viewer_->setCameraManipulator(manipulator);
   viewer_->getCameraManipulator()->home(1.0);
+  viewer_->setSceneData(tc_.createHUD());
 }
 
 void OSGWidget::paintEvent( QPaintEvent* paintEvent )
@@ -40,6 +40,7 @@ void OSGWidget::resizeGL( int width, int height )
   osg::ref_ptr<osg::Camera> camera = viewer_->getCamera();
   graphics_window_->resized( this->x(), this->y(), width, height );
   camera->setViewport( 0, 0, this->width(), this->height());
+  tc_.adjust_size(width, height);
 }
 
 osgGA::EventQueue* OSGWidget::getEventQueue() const
