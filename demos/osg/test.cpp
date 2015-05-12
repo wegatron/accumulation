@@ -3,6 +3,8 @@
 #include <osgViewer/Viewer>
 #include <osg/ShapeDrawable>
 #include <osgText/Text3D>
+#include <osg/PolygonMode>
+#include <osgDB/WriteFile>
 
 osg::Node * text3d()
 {
@@ -15,12 +17,18 @@ osg::Node * text3d()
   text3D->setCharacterSize(10);
   text3D->setDrawMode(osgText::Text3D::TEXT | osgText::Text3D::BOUNDINGBOX);
   text3D->setAxisAlignment(osgText::Text3D::XZ_PLANE);
-  text3D->setText("Hellow");
+  text3D->setText("Hellow haha");
 
   osg::Group *group = new osg::Group;
   osg::Geode* geode = new osg::Geode;
   geode->addDrawable(text3D);
   group->addChild(geode);
+  osg::PolygonMode * polygonMode = new osg::PolygonMode;
+  polygonMode->setMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
+
+  group->getOrCreateStateSet()->setAttributeAndModes( polygonMode,
+                                  osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
+  osgDB::writeNodeFile(*group, "/home/wegatron/out.obj");
   return group;
 }
 
