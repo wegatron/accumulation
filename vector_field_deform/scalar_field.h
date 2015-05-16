@@ -3,7 +3,7 @@
 
 namespace zsw {
 
-  class Funtion
+  class Function
   {
   public:
     virtual double val(const double *x) = 0;
@@ -13,7 +13,7 @@ namespace zsw {
   /**
    * function e(x) and f(x)
    */
-  class LinearScalarField final : public Function
+  class LinearScalarField  final : public Function
   {
   public:
     LinearScalarField(const double *u, const double *c);
@@ -53,7 +53,10 @@ namespace zsw {
     };
     virtual double val(const double*x) = 0;
     virtual void gra(const double *x, double *g) = 0;
-    virtual Region::REGION_TYPE judgeRegion(const double *x) = 0;
+    virtual REGION_TYPE judgeRegion(const double *x) = 0;
+  protected:
+    double ri_;
+    double ro_;
   };
 
   class SphereRegionFunc final : public RegionFunc
@@ -62,10 +65,7 @@ namespace zsw {
     SphereRegionFunc(const double ri, const double ro);
     double val(const double*x);
     void gra(const double *x, double *g);
-    Region::REGION_TYPE judgeRegion(const double *x);
-  private:
-    double ri_;
-    double ro_;
+    REGION_TYPE judgeRegion(const double *x);
   };
 }
 

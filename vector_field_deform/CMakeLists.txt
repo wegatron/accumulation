@@ -22,6 +22,10 @@ endif(EIGEN3_FOUND)
 
 # add_library(functions SHARED functions.f)
 
-add_executable(test test.cpp scalar_field.cpp scalar_field.h)
+file(GLOB src *.cpp)
+file(GLOB headers *.h)
+
+add_library(vector_fields SHARED ${src} ${headers})
+# add_executable(test test.cpp scalar_field.cpp scalar_field.h)
 
 # target_link_libraries(test functions)

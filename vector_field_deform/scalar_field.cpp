@@ -40,3 +40,26 @@ void zsw::BlendFunc::gra(const double *r, double *g)
 }
 
 zsw::BlendFunc::~BlendFunc() {}
+
+zsw::SphereRegionFunc::SphereRegionFunc(const double ri, const double ro)
+{
+  ri_ = ri;
+  ro_ = ro;
+}
+
+double zsw::SphereRegionFunc::val(const double *x)
+{
+  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  return 0.0;
+}
+
+void zsw::SphereRegionFunc::gra(const double *x, double *g)
+{
+  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+}
+
+zsw::RegionFunc::REGION_TYPE judgeRegion(const double *x)
+{
+  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  return zsw::RegionFunc::INNER_REGION;
+}
