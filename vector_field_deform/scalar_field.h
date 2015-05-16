@@ -6,8 +6,8 @@ namespace zsw {
   class Funtion
   {
   public:
-    virtual double val() = 0;
-    virtual void gra(double *g) = 0;
+    virtual double val(const double *x) = 0;
+    virtual void gra(const double *x, double *g) = 0;
   };
 
   /**
@@ -16,12 +16,11 @@ namespace zsw {
   class LinearScalarField final : public Function
   {
   public:
-    LinearScalarField(const double *x, const double *u, const double *c);
-    virtual double val();
-    virtual void gra(double *g);
+    LinearScalarField(const double *u, const double *c);
+    virtual double val(const double *x);
+    virtual void gra(const double *x, double *g);
     ~LinearScalarField();
   private:
-    double x_[3];
     double u_[3];
     double c_[3];
   };
@@ -33,8 +32,8 @@ namespace zsw {
   {
   public:
     BlendFunc(const double ri, const double ro);
-    virtual double val();
-    virtual void gra(double *g);
+    double val(const double *r);
+    void gra(const double *r, double *g);
     ~BlendFunc();
   private:
     double ri_;
@@ -52,9 +51,21 @@ namespace zsw {
       BLENDER_REGION,
       OUTER_REGION
     };
-    virtual double val() = 0;
-    virtual void gra(double *g) = 0;
+    virtual double val(const double*x) = 0;
+    virtual void gra(const double *x, double *g) = 0;
     virtual Region::REGION_TYPE judgeRegion(const double *x) = 0;
+  };
+
+  class SphereRegionFunc final : public RegionFunc
+  {
+  public:
+    SphereRegionFunc(const double ri, const double ro);
+    double val(const double*x);
+    void gra(const double *x, double *g);
+    Region::REGION_TYPE judgeRegion(const double *x);
+  private:
+    double ri_;
+    double ro_;
   };
 }
 
