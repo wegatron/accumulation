@@ -14,7 +14,7 @@ double zsw::LinearScalarField::val(const double *x)
   return u_[0]*(x[0]-c_[0])+u_[1]*(x[1]-c_[1])+u_[2]*(x[2]-c_[2]);
 }
 
-void zsw::LinearScalarField::gra(const double *x, double *g)
+void zsw::LinearScalarField::jac(const double *x, double *g)
 {
   memcpy(g, u_, sizeof(double)*3);
 }
@@ -34,7 +34,7 @@ double zsw::BlendFunc::val(const double *r)
   return 0.0;
 }
 
-void zsw::BlendFunc::gra(const double *r, double *g)
+void zsw::BlendFunc::jac(const double *r, double *g)
 {
   std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
 }
@@ -53,12 +53,12 @@ double zsw::SphereRegionFunc::val(const double *x)
   return 0.0;
 }
 
-void zsw::SphereRegionFunc::gra(const double *x, double *g)
+void zsw::SphereRegionFunc::jac(const double *x, double *g)
 {
   std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
 }
 
-zsw::RegionFunc::REGION_TYPE judgeRegion(const double *x)
+zsw::RegionFunc::REGION_TYPE zsw::SphereRegionFunc::judgeRegion(const double *x)
 {
   std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
   return zsw::RegionFunc::INNER_REGION;

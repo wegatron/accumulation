@@ -7,7 +7,7 @@ namespace zsw {
   {
   public:
     virtual double val(const double *x) = 0;
-    virtual void gra(const double *x, double *g) = 0;
+    virtual void jac(const double *x, double *g) = 0;
   };
 
   /**
@@ -18,7 +18,7 @@ namespace zsw {
   public:
     LinearScalarField(const double *u, const double *c);
     virtual double val(const double *x);
-    virtual void gra(const double *x, double *g);
+    virtual void jac(const double *x, double *g);
     ~LinearScalarField();
   private:
     double u_[3];
@@ -33,7 +33,7 @@ namespace zsw {
   public:
     BlendFunc(const double ri, const double ro);
     double val(const double *r);
-    void gra(const double *r, double *g);
+    void jac(const double *r, double *g);
     ~BlendFunc();
   private:
     double ri_;
@@ -52,7 +52,7 @@ namespace zsw {
       OUTER_REGION
     };
     virtual double val(const double*x) = 0;
-    virtual void gra(const double *x, double *g) = 0;
+    virtual void jac(const double *x, double *g) = 0;
     virtual REGION_TYPE judgeRegion(const double *x) = 0;
   protected:
     double ri_;
@@ -64,7 +64,7 @@ namespace zsw {
   public:
     SphereRegionFunc(const double ri, const double ro);
     double val(const double*x);
-    void gra(const double *x, double *g);
+    void jac(const double *x, double *g);
     REGION_TYPE judgeRegion(const double *x);
   };
 }
