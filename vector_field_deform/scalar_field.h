@@ -19,7 +19,7 @@ namespace zsw {
     LinearScalarField(const double *x, const double *u, const double *c);
     virtual double val();
     virtual void gra(double *g);
-    virtual ~LinearScalarField();
+    ~LinearScalarField();
   private:
     double x_[3];
     double u_[3];
@@ -31,6 +31,14 @@ namespace zsw {
    */
   class BlendFunc final : public Function
   {
+  public:
+    BlendFunc(const double ri, const double ro);
+    virtual double val();
+    virtual void gra(double *g);
+    ~BlendFunc();
+  private:
+    double ri_;
+    double ro_;
   };
 
   /**
