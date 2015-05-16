@@ -1,0 +1,3 @@
+add_executable(test_linear_scalar_field test_linear_scalar_field.cpp)
+
+target_link_libraries(test_linear_scalar_field vector_fields)
