@@ -1,7 +1,10 @@
 #include "scalar_field.h"
 
 #include <iostream>
+#include <stdexcept>
+#include <string>
 #include <string.h>
+#include <assert.h>
 
 zsw::LinearScalarField::LinearScalarField(const double *u, const double *c)
 {
@@ -21,22 +24,26 @@ void zsw::LinearScalarField::jac(const double *x, double *g)
 
 zsw::LinearScalarField::~LinearScalarField(){}
 
-
 zsw::BlendFunc::BlendFunc(const double ri, const double ro)
 {
   ri_ = ri;
   ro_ = ro;
+  assert(ro_>ri_);
 }
 
 double zsw::BlendFunc::val(const double *r)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
-  return 0.0;
+  if(*r<ri_ || *r>ro_) {
+    std::cerr << "[ERROR] r in blend func should in (ri,ro):" << ri_ << " " << ro_ << std::endl;
+    throw std::logic_error("[ERROR] r in blend func should in (ri,ro):"+std::to_string(ri_)+" "+std::to_string(ro_));
+  }
+  double v= (*r-ri_)/(ro_-ri_);
+  return 4*v*v*v*(1-v) + v*v*v*v;
 }
 
 void zsw::BlendFunc::jac(const double *r, double *g)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  g[0] = 12*(*r-ri_)*(*r-ri_)*(ro_-*r)/(ro_-ri_);
 }
 
 zsw::BlendFunc::~BlendFunc() {}

@@ -24,7 +24,7 @@ void testValSpecafic()
     c<< 2.4, 1.2, 4.1;
     LinearScalarField lsf(u.data(), c.data());
     if( fabs(lsf.val(x.data()) +2.2)>EPS ) {
-      std::cout << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
+      std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
       suc = false;
     }
   }
@@ -34,7 +34,7 @@ void testValSpecafic()
     c<< 923.0, 123.0, 52.23;
     LinearScalarField lsf(u.data(), c.data());
     if( fabs(lsf.val(x.data()) + 35219.7460400000)>EPS ) {
-      std::cout << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
+      std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
       suc = false;
     }
   }

@@ -4,7 +4,7 @@ enable_language(Fortran)
 
 set( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};$ENV{HOME}/usr/share/cmake/Modules/")
 
-set(CMAKE_CXX_FLAGS "-std=c++0x -fPIC ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++11 -fPIC ${CMAKE_CXX_FLAGS}")
 
 find_package(Eigen3 REQUIRED)
 if(EIGEN3_FOUND)
