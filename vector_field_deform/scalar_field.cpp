@@ -5,6 +5,7 @@
 #include <string>
 #include <string.h>
 #include <assert.h>
+#include <cmath>
 
 zsw::LinearScalarField::LinearScalarField(const double *u, const double *c)
 {
@@ -48,25 +49,31 @@ void zsw::BlendFunc::jac(const double *r, double *g)
 
 zsw::BlendFunc::~BlendFunc() {}
 
-zsw::SphereRegionFunc::SphereRegionFunc(const double ri, const double ro)
+zsw::SphereRegionFunc::SphereRegionFunc(const double ri, const double ro, const double *center)
 {
   ri_ = ri;
   ro_ = ro;
+  memcpy(center_, center, sizeof(double)*3);
 }
 
 double zsw::SphereRegionFunc::val(const double *x)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
-  return 0.0;
+  return  sqrt((x[0]-center_[0])*(x[0]-center_[0])+(x[1]-center_[1])*(x[1]-center_[1])+(x[2]-center_[2])*(x[2]-center_[2]));
 }
 
 void zsw::SphereRegionFunc::jac(const double *x, double *g)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  g[0] = 2*(x[0]-center_[0]);   g[1] = 2*(x[1]-center_[1]);   g[2] = 2*(x[2]-center_[2]);
 }
 
 zsw::RegionFunc::REGION_TYPE zsw::SphereRegionFunc::judgeRegion(const double *x)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
-  return zsw::RegionFunc::INNER_REGION;
+  double v = (x[0]-center_[0])*(x[0]-center_[0])+(x[1]-center_[1])*(x[1]-center_[1])+(x[2]-center_[2])*(x[2]-center_[2]);
+  if(v > ro_*ro_)   {
+    return zsw::RegionFunc::OUTER_REGION;
+  }
+  if(v < ri_*ri_) {
+    return zsw::RegionFunc::INNER_REGION;
+  }
+  return zsw::RegionFunc::BLENDER_REGION;
 }

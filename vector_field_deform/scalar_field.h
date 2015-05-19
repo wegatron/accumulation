@@ -62,10 +62,12 @@ namespace zsw {
   class SphereRegionFunc final : public RegionFunc
   {
   public:
-    SphereRegionFunc(const double ri, const double ro);
+    SphereRegionFunc(const double ri, const double ro, const double *center);
     double val(const double*x);
     void jac(const double *x, double *g);
     REGION_TYPE judgeRegion(const double *x);
+  private:
+    double center_[3];
   };
 }
 
