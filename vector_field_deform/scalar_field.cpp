@@ -29,7 +29,10 @@ zsw::BlendFunc::BlendFunc(const double ri, const double ro)
 {
   ri_ = ri;
   ro_ = ro;
-  assert(ro_>ri_);
+  if(ri_ > ro_) {
+    std::cerr << "ro < ri " << ro_  << " " << ri_ << std::endl;
+    throw std::logic_error("ro < ri "+std::to_string(ro_) + " " + std::to_string(ri_));
+  }
 }
 
 double zsw::BlendFunc::val(const double *r)
@@ -53,6 +56,10 @@ zsw::SphereRegionFunc::SphereRegionFunc(const double ri, const double ro, const 
 {
   ri_ = ri;
   ro_ = ro;
+  if(ri_ > ro_) {
+    std::cerr << "ro < ri " << ro_  << " " << ri_ << std::endl;
+    throw std::logic_error("ro < ri "+std::to_string(ro_) + " " + std::to_string(ri_));
+  }
   memcpy(center_, center, sizeof(double)*3);
 }
 
@@ -69,6 +76,7 @@ void zsw::SphereRegionFunc::jac(const double *x, double *g)
 zsw::RegionFunc::REGION_TYPE zsw::SphereRegionFunc::judgeRegion(const double *x)
 {
   double v = (x[0]-center_[0])*(x[0]-center_[0])+(x[1]-center_[1])*(x[1]-center_[1])+(x[2]-center_[2])*(x[2]-center_[2]);
+  // std::cerr <<"[DEBUG]" <<  v << " " << ro_*ro_ << " " << ri_*ri_ << std::endl;
   if(v > ro_*ro_)   {
     return zsw::RegionFunc::OUTER_REGION;
   }

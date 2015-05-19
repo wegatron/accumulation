@@ -7,6 +7,7 @@
 #include "jac_hes_err.h"
 
 using namespace std;
+using namespace zsw;
 
 #define EPS 1e-6
 
@@ -25,6 +26,7 @@ void testValSpecific()
       suc = false;
     }
     if(spf.judgeRegion(x) != zsw::RegionFunc::INNER_REGION) {
+      suc =false;
       std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
     }
   }
@@ -40,6 +42,7 @@ void testValSpecific()
       suc = false;
     }
     if(spf.judgeRegion(x) != zsw::RegionFunc::OUTER_REGION) {
+      suc = false;
       std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
     }
   }
@@ -47,14 +50,15 @@ void testValSpecific()
   //boundary ri
   {
     double c[3] = {67.182, 87.12, -123.12};
-    SphereRegionFunc spf(92.85, 126, c);
+    SphereRegionFunc spf(92.86, 126, c);
     double x[3] = {1.2, 30.4, -90.7};
-    if(fabs(spf(x) - 92.85385896127312)>EPS) {
+    if(fabs(spf.val(x) - 92.85385896127312)>EPS) {
       std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
       std::cerr << "val:" << spf.val(x) << std::endl;
       suc = false;
     }
     if(spf.judgeRegion(x) != zsw::RegionFunc::INNER_REGION) {
+      suc = false;
       std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
     }
   }
@@ -62,14 +66,15 @@ void testValSpecific()
   //boundary ri
   {
     double c[3] = {67.182, 87.12, -123.12};
-    SphereRegionFunc spf(92.85, 126, c);
+    SphereRegionFunc spf(92.86, 126, c);
     double x[3] = {0, 30.4, -90.7};
-    if(fabs(spf(x) - 93.71038322405901)>EPS) {
+    if(fabs(spf.val(x) - 93.71038322405901)>EPS) {
       std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
       std::cerr << "val:" << spf.val(x) << std::endl;
       suc = false;
     }
     if(spf.judgeRegion(x) != zsw::RegionFunc::BLENDER_REGION) {
+      suc = false;
       std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
     }
   }
@@ -79,7 +84,7 @@ void testValSpecific()
     double c[3] = {62.19, -26.2, 57.0};
     SphereRegionFunc spf(92.85, 165, c);
     double x[3] = {11.2, 25.4, -90.7};
-    if(fabs(spf(x) - 164.553426278519)>EPS) {
+    if(fabs(spf.val(x) - 164.553426278519)>EPS) {
       std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
       std::cerr << "val:" << spf.val(x) << std::endl;
       suc = false;
@@ -94,7 +99,7 @@ void testValSpecific()
     double c[3] = {62.19, -26.2, 57.0};
     SphereRegionFunc spf(92.85, 165, c);
     double x[3] = {11.2, 25.4, -91.7};
-    if(fabs(spf(x) - 165.4515944317249)>EPS) {
+    if(fabs(spf.val(x) - 165.4515944317249)>EPS) {
       std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
       std::cerr << "val:" << spf.val(x) << std::endl;
       suc = false;
