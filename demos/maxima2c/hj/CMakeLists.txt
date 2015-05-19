@@ -16,9 +16,9 @@ add_custom_command(OUTPUT collision_ball_energy.f90
   DEPENDS collision_ball_energy.mac)
 add_library(collision_energy SHARED collision_ball_energy.f90)
 
-add_executable(test_collision_energy test.cpp)
+# add_executable(test_collision_energy test.cpp)
 
-target_link_libraries(test_collision_energy
-         collision_energy
-         spring
-)
+# target_link_libraries(test_collision_energy
+#          collision_energy
+#          spring
+# )

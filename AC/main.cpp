@@ -1,25 +1,36 @@
 #include <iostream>
+#include <algorithm>
+#include <string.h>
 #include <vector>
 
 using namespace std;
 
+class Solution {
+public:
+    int numIslands(vector<vector<char>>& grid) {
+      const size_t row = grid.size();
+      if(row == 0) return 0;
+      const size_t col = grid[0].size();
+      if(col == 0) return 0;
+      vector<vector<bool>> visited(row, vector<bool>(col, false));
+      size_t cnt = 0;
+      for(size_t i=0; i<row; ++i) {
+        for(size_t j=0; j<col; ++j) {
+          if(grid[i][j]=='1' && !visited[i][j]) {
+            bfs(grid, i, j, visited, cnt);
+          }
+        }
+      }
+      return 0;
+    }
+private:
+  void bfs(const vector<vector<char>>& grid, size_t pos_r, size_t pos_j, vector<vector<bool>>& visited, size_t &cnt)
+  {
+
+  }
+};
+
 int main(int argc, char *argv[])
 {
-  int numerator, denominator;
-  cin >> numerator >> denominator;
-  if(numerator == 0) { cout << 0 << endl;  return 0;}
-  int res_int = numerator/denominator;
-  vector<int> ints(denominator, 0);
-  for(int i=0; i<denominator; ++i) {
-    ints[i] = i*10/denominator;
-  }
-  vector<bool> vs(denominator, false);
-  vector<int> float_parts;
-  for(int le = numerator%denominator; le!=0 && !vs[le]; ) {
-    float_parts.push_back(ints[le]);
-    vs[le] = true;
-    le = (le*10)%denominator;
-  }
-
   return 0;
 }

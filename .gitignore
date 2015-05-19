@@ -22,3 +22,10 @@
 
 # build directory
 build
+
+# tmp
+tmp
+
+#other
+AC/main.cpp
+AC/input
