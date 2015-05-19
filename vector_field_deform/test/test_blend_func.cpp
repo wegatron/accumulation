@@ -101,7 +101,7 @@ void testGraErr(size_t time)
     double max_err = graErr(blf, x);
     if(max_err > 5e-4) {
       std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
-      std::cerr << "err val:" << graErr(blf, x) << std::endl;
+      std::cerr << "err val:" << max_err << std::endl;
       std::cerr <<  "x: " << x << std::endl;
       std::cerr << "ri, ro:" << r[0] << " " << r[1] << std::endl;
       suc = false;

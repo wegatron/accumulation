@@ -43,7 +43,7 @@ double zsw::BlendFunc::val(const double *r)
 
 void zsw::BlendFunc::jac(const double *r, double *g)
 {
-  g[0] = 12*(*r-ri_)*(*r-ri_)*(ro_-*r)/(ro_-ri_);
+  g[0] = 12*(*r-ri_)*(*r-ri_)*(ro_-*r)/((ro_-ri_)*(ro_-ri_)*(ro_-ri_)*(ro_-ri_));
 }
 
 zsw::BlendFunc::~BlendFunc() {}

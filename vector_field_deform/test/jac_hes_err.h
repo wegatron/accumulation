@@ -36,7 +36,7 @@ double graErr(EnergyType &energy, Eigen::VectorXd &x)
 {
   Eigen::VectorXd g(x.size());
   energy.jac(x.data(),g.data());
-  std::cerr << "max fabs(g):" << maxFabsArray(&g[0],g.size()) << std::endl;
+  /* std::cerr << "max fabs(g):" << maxFabsArray(&g[0],g.size()) << std::endl; */
   const double eps = 1e-6;
   for(int i=0; i<g.size(); ++i) {
     double save = x[i];
@@ -50,6 +50,7 @@ double graErr(EnergyType &energy, Eigen::VectorXd &x)
     x[i] = save - 2*eps;
     v[3] = energy.val(x.data());
     g[i] -= (8*(v[0]-v[1])-v[2]+v[3])/(12*eps);
+    /* std::cout << (8*(v[0]-v[1])-v[2]+v[3])/(12*eps) << std::endl; */
     x[i] = save;
   }
   return maxFabsArray(&g[0], g.size());
