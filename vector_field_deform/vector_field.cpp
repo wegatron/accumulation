@@ -13,6 +13,10 @@ zsw::VectorField::VectorField()
 
 void zsw::VectorField::val(const double *x, double *val)
 {
+  assert(ex_func_!=nullptr);
+  assert(fx_func_!=nullptr);
+  assert(br_func_!=nullptr);
+  assert(rx_func_!=nullptr);
   // judge region and caculate vector field
   zsw::RegionFunc::REGION_TYPE region_type = rx_func_->judgeRegion(x);
   if( region_type == zsw::RegionFunc::OUTER_REGION) {
@@ -22,7 +26,7 @@ void zsw::VectorField::val(const double *x, double *val)
     ex_func_->jac(x, jac_e.data());
     fx_func_->jac(x, jac_f.data());
     res = jac_e.cross(jac_f);
-    std::copy(val, val+3, res.data());
+    std::copy(res.data(), res.data()+3, val);
   } else {
     Eigen::Vector3d jac_e, jac_f, jac_b, res;
     double g_b_r = 0.0;
@@ -45,7 +49,7 @@ void zsw::VectorField::setExFunc(std::shared_ptr<zsw::Function> ex_func)
 
 void zsw::VectorField::setFxFunc(std::shared_ptr<zsw::Function> fx_func)
 {
-  fx_func = fx_func;
+  fx_func_ = fx_func;
 }
 
 void zsw::VectorField::setBrFunc(std::shared_ptr<zsw::BlendFunc> br_func)
