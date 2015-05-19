@@ -2,32 +2,58 @@
 
 #include <iostream>
 
+#include <Eigen/Dense>
+
+using namespace zsw;
+using namespace std;
+
 zsw::VectorField::VectorField()
 {
 }
 
 void zsw::VectorField::val(const double *x, double *val)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  // judge region and caculate vector field
+  zsw::RegionFunc::REGION_TYPE region_type = rx_func_->judgeRegion(x);
+  if( region_type == zsw::RegionFunc::OUTER_REGION) {
+    fill(val, val+3, 0.0);
+  } else if(region_type == zsw::RegionFunc::INNER_REGION) {
+    Eigen::Vector3d jac_e, jac_f, res;
+    ex_func_->jac(x, jac_e.data());
+    fx_func_->jac(x, jac_f.data());
+    res = jac_e.cross(jac_f);
+    std::copy(val, val+3, res.data());
+  } else {
+    Eigen::Vector3d jac_e, jac_f, jac_b, res;
+    double g_b_r = 0.0;
+    ex_func_->jac(x, jac_e.data());
+    fx_func_->jac(x, jac_f.data());
+    rx_func_->jac(x, jac_b.data());
+    br_func_->jac(x, &g_b_r);
+    jac_b *= g_b_r;
+
+    res = (-jac_b*ex_func_->val(x) - br_func_->val(x)*jac_e).cross(-jac_b*fx_func_->val(x)-br_func_->val(x)*jac_f);
+    std::copy(res.data(), res.data()+3, val);
+  }
 }
 
 void zsw::VectorField::setExFunc(std::shared_ptr<zsw::Function> ex_func)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  ex_func_ = ex_func;
 }
 
 
 void zsw::VectorField::setFxFunc(std::shared_ptr<zsw::Function> fx_func)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  fx_func = fx_func;
 }
 
 void zsw::VectorField::setBrFunc(std::shared_ptr<zsw::BlendFunc> br_func)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  br_func_ = br_func;
 }
 
 void zsw::VectorField::setRxFunc(std::shared_ptr<zsw::RegionFunc> rx_func)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  rx_func_ = rx_func;
 }
