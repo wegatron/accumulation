@@ -50,7 +50,8 @@ double graErr(EnergyType &energy, Eigen::VectorXd &x)
     x[i] = save - 2*eps;
     v[3] = energy.val(x.data());
     g[i] -= (8*(v[0]-v[1])-v[2]+v[3])/(12*eps);
-    /* std::cout << (8*(v[0]-v[1])-v[2]+v[3])/(12*eps) << std::endl; */
+    /* std::cout << "new:" << (8*(v[0]-v[1])-v[2]+v[3])/(12*eps) << std::endl; */
+    /* std::cout << "old:" << (v[0]-v[1])/(2*eps) << std::endl; */
     x[i] = save;
   }
   return maxFabsArray(&g[0], g.size());

@@ -54,6 +54,8 @@ namespace zsw {
     virtual double val(const double*x) = 0;
     virtual void jac(const double *x, double *g) = 0;
     virtual REGION_TYPE judgeRegion(const double *x) = 0;
+    double getRi() const { return ri_; }
+    double getRo() const { return ro_; }
   protected:
     double ri_;
     double ro_;
@@ -66,6 +68,7 @@ namespace zsw {
     double val(const double*x);
     void jac(const double *x, double *g);
     REGION_TYPE judgeRegion(const double *x);
+    const double * getCenter() const { return center_; }
   private:
     double center_[3];
   };

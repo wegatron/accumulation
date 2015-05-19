@@ -1,6 +1,6 @@
 #include <iostream>
 #include <chrono>
-
+#include <memory>
 #include <Eigen/Dense>
 
 #include "../scalar_field.h"
@@ -90,6 +90,7 @@ void testValSpecific()
       suc = false;
     }
     if(spf.judgeRegion(x) != zsw::RegionFunc::BLENDER_REGION) {
+      suc = false;
       std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
     }
   }
@@ -105,6 +106,7 @@ void testValSpecific()
       suc = false;
     }
     if(spf.judgeRegion(x) != zsw::RegionFunc::OUTER_REGION) {
+      suc = false;
       std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
     }
   }
@@ -112,12 +114,68 @@ void testValSpecific()
   if(suc) { std::cout << "[INFO]" << __FUNCTION__ << "passed!" << std::endl; }
 }
 
-void testValRandom(const size_t time)
+static SphereRegionFunc* genRandomFunc(double *x, double *c, double *r)
 {
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  std::default_random_engine generator(seed);
+  std::uniform_real_distribution<double> distribution(-100.0,100.0);
+  std::uniform_real_distribution<double> distribution_ro(150.0,200.0);
+  std::uniform_real_distribution<double> distribution_ri(10.0,120.0);
+  for(size_t i=0; i<3; ++i) {
+    x[i] = distribution(generator);
+    c[i] = distribution(generator);
+  }
+  r[0] = distribution_ri(generator);
+  r[1] = distribution_ro(generator);
+  return new SphereRegionFunc(r[0], r[1], c);
 }
 
-void testGraErr(const size_t time)
+void testValRandom(size_t time)
 {
+  bool suc = true;
+  Eigen::Vector3d x(3), c(3);
+  double r[2];
+  do {
+    std::shared_ptr<SphereRegionFunc> spf(genRandomFunc(x.data(), c.data(), r));
+    if(fabs(spf->val(x.data()) - (x-c).norm())  > EPS) {
+      std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
+      std::cerr << "c: " << c.transpose() << std::endl;
+      std::cerr << "x:" << x.transpose() << std::endl;
+      suc = false;
+      break;
+    }
+    zsw::RegionFunc::REGION_TYPE region_type = zsw::RegionFunc::BLENDER_REGION;
+    if((x-c).norm() > r[1]) { region_type = zsw::RegionFunc::OUTER_REGION; }
+    else if((x-c).norm() < r[0] ) { region_type = zsw::RegionFunc::INNER_REGION; }
+    if(spf->judgeRegion(x.data()) != region_type) {
+      suc = false;
+      std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
+    }
+  } while(--time);
+  if(suc) { std::cout << "[INFO]"  << __FUNCTION__ << " passed!" << std::endl; }
+}
+
+void testGraErr(size_t time)
+{
+  bool suc = true;
+  Eigen::VectorXd x(3), c(3);
+  double r[2];
+  do{
+    std::shared_ptr<SphereRegionFunc> spf(genRandomFunc(x.data(), c.data(), r));
+    double max_err = graErr(*spf, x);
+    if(max_err > 1e-3) {
+      suc = false;
+      std::cerr << "[ERROR]" << __FILE__ << __LINE__ << std::endl;
+      std::cerr << "max_err:" << max_err << std::endl;
+      std::cerr << "x:" << x.transpose() << std::endl;
+      std::cerr << "c:" << c.transpose() << std::endl;
+      Eigen::VectorXd g(3); spf->jac(x.data(), g.data());
+      std::cerr << "jac:" << g.transpose() << std::endl;
+      break;
+    }
+  }while(--time);
+
+  if(suc) { std::cout << "[INFO]"  << __FUNCTION__ << " passed!" << std::endl; }
 }
 
 int main(int argc, char *argv[])
