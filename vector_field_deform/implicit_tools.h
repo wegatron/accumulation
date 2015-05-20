@@ -1,7 +1,7 @@
 #ifndef IMPLICIT_TOOLS_H
 #define IMPLICIT_TOOLS_H
 
-#include "vector_field.h"
+#include "integrate.h"
 
 namespace zsw{
   class ImplicitTool
@@ -14,7 +14,7 @@ namespace zsw{
   {
   public:
     SphereDeformTool() {
-      fill(center_, center_+6, 0.0);
+      std::fill(&center_[0][0], &center_[0][0]+6, 0.0);
       r_[0] = r_[1] = 0.0;
       pre = -1; now = 0;
     }
