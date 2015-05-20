@@ -46,15 +46,16 @@ u1 : matrix([ 1.3, 5.8, -7.833134]);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
-xx: genmatrix(xx, 1,3);
+diff(lf(matrix([xv, 42.1, -4.1]),u0,c,ri,ro),xv);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
-xx[1,1];
+func(xv) := −3.34*(1−0.02188298729036*((sqrt((xv+14.13)^2+6.050000000000004)−4.3)^4+4*(6.9−sqrt((xv+14.13)^2+6.050000000000004))*(sqrt((xv+14.13)^2+6.050000000000004)−4.3)^3))−
+(0.26259584748433*(xv+14.13)*(23.87000000000001−3.34*(xv+14.13))*(6.9−sqrt((xv+14.13)^2+6.050000000000004))*(sqrt((xv+14.13)^2+6.050000000000004)−4.3)^2)/sqrt((xv+14.13)^2+6.050000000000004);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
-diff(lf(xx,u0,c,ri,ro),xx[1,1]);
+func(-10.34);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */

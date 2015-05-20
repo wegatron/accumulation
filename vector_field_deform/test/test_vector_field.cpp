@@ -89,8 +89,9 @@ void testValSpecific()
     // test val
     Eigen::Vector3d val_vf, x, val_expected, jac_p, jac_q;
     x << -10.3, 42.1, -4.1;
-    jac_p << -3.693171816308218, -8.200333524850075, 6.52259941800307;
-    jac_q << 1.763862651620224, 5.65168452645579, -7.544848132958021;
+    jac_p << -3.69317, -8.16737,  6.46809;
+    jac_q << 1.90862,   5.6044, -7.45463;
+
     val_expected = jac_p.cross(jac_q);
     vf.val(x.data(), val_vf.data());
     if((val_vf-val_expected).squaredNorm() > EPS) {

@@ -36,7 +36,9 @@ void zsw::VectorField::val(const double *x, double *val)
     br_func_->jac(&r, &g_b_r);
     jac_b *= g_b_r;
 
-    res = (-jac_b*ex_func_->val(x) - br_func_->val(&r)*jac_e).cross(-jac_b*fx_func_->val(x)-br_func_->val(&r)*jac_f);
+    Eigen::Vector3d pv=-jac_b*ex_func_->val(x)  +(1-br_func_->val(&r))*jac_e;
+    Eigen::Vector3d qv = -jac_b*fx_func_->val(x)+ (1-br_func_->val(&r))*jac_f;
+    res = pv.cross(qv);
     std::copy(res.data(), res.data()+3, val);
   }
 }

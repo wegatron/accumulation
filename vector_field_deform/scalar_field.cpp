@@ -71,7 +71,9 @@ double zsw::SphereRegionFunc::val(const double *x)
 void zsw::SphereRegionFunc::jac(const double *x, double *g)
 {
   double v_tmp = sqrt((x[0]-center_[0])*(x[0]-center_[0]) +
-                          (x[1]-center_[1])*(x[1]-center_[1]) + (x[2]-center_[2])*(x[2]-center_[2])) ;
+                          (x[1]-center_[1])*(x[1]-center_[1]) + (x[2]-center_[2])*(x[2]-center_[2]));
+  // std::cerr << "v_tmp:" << v_tmp << std::endl;
+  // std::cerr << "x[0]-center_[0]:" << x[0]-center_[0]<< std::endl;
   g[0] = (x[0]-center_[0])/v_tmp;   g[1] = (x[1]-center_[1])/v_tmp;   g[2] = (x[2]-center_[2])/v_tmp;
 }
 
