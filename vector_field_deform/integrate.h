@@ -7,16 +7,26 @@
 #include "vector_field.h"
 
 namespace zsw {
-  class VectorFieldIntegrate
+  class VectorFieldIntegrator
   {
   public:
-    VectorFieldIntegrate() { h_=0.01; // the value is from Fernando }
+    virtual Eigen::Vector3d operator()(const double* pos) const = 0;
+    virtual void pushVectorField(std::shared_ptr<VectorField> vf) = 0;
+    virtual void setStep(const double h) { h_ = h; }
+  protected:
+    double h_;
+  };
+
+  class AdVectorIntegrator final : public VectorFieldIntegrator
+  {
+  public:
+    AdVectorIntegrator() {
+      h_=0.01; // the value is from Fernando
+    }
     Eigen::Vector3d operator()(const double* pos) const;
     void pushVectorField(std::shared_ptr<VectorField> vf);
-    void setStep(const double h) { h_ = h; }
   private:
-      std::vector<std::shared_ptr<VectorField>> vfs_;
-      double h_;
+    std::vector<std::shared_ptr<VectorField>> vfs_;
   };
 }
 

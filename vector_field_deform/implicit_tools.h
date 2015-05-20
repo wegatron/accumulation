@@ -25,6 +25,17 @@ namespace zsw{
     double center_[2][3];
     double r_[2];
   };
+
+  class VfDeformer
+  {
+  public:
+    void loadModel(const std::string& file_path);
+    void saveModel(const std::string& fille_path);
+    void pushVectorField(std::shared_ptr<VectorField> vf);
+    void deform();
+  private:
+    std::shared_ptr<VectorFieldIntegrator> vf_integrator_;
+  };
 }
 
 #endif /* IMPLICIT_TOOLS_H */

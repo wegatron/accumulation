@@ -9,3 +9,6 @@ target_link_libraries(test_region_func vector_fields)
 
 add_executable(test_vector_field test_vector_field.cpp)
 target_link_libraries(test_vector_field vector_fields)
+
+add_executable(test_implicit_tool test_implicit_tool.cpp)
+target_link_libraries(test_implicit_tool vector_fields)

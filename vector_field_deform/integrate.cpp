@@ -2,7 +2,7 @@
 
 using namespace zsw;
 
-Eigen::Vector3d zsw::VectorFieldIntegrate::operator()(const double* pos) const
+Eigen::Vector3d zsw::AdVectorIntegrator::operator()(const double* pos) const
 {
   if(vfs_.size() < 3) {
     Eigen::Vector3d vel;
@@ -25,7 +25,7 @@ Eigen::Vector3d zsw::VectorFieldIntegrate::operator()(const double* pos) const
   return (k1+4*k2+k3)/6*h_;
 }
 
-void zsw::VectorFieldIntegrate::pushVectorField(std::shared_ptr<VectorField> vf)
+void zsw::AdVectorIntegrator::pushVectorField(std::shared_ptr<VectorField> vf)
 {
   #if 0
   if(vfs_.size()>=3) {
