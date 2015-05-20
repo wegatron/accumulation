@@ -137,6 +137,45 @@ static VectorField* genRandomVectorField(double *x)
   return vf;
 }
 
+static void cacuValExpected(std::shared_ptr<VectorField> vf, Eigen::Vector3d &x, Eigen::Vector3d &val_expected)
+{
+  Eigen::Vector3d pv, qv;
+  std::shared_ptr<Function> ex_func = vf->getExFunc();
+  std::shared_ptr<Function> fx_func = vf->getFxFunc();
+  std::shared_ptr<RegionFunc> rx_func = vf->getRxFunc();
+  std::shared_ptr<BlendFunc> br_func = vf->getBrFunc();
+  if(rx_func->judgeRegion(x.data()) == zsw::RegionFunc::INNER_REGION) {
+    ex_func->jac(x.data(), pv.data());
+    fx_func->jac(x.data(), qv.data());
+  } else if(rx_func->judgeRegion(x.data()) == zsw::RegionFunc::OUTER_REGION) {
+    pv.setZero();
+    qv.setZero();
+  } else {
+    const double eps = 1e-6;
+    for(size_t i=0; i<3; ++i) {
+      double save = x[i];
+      double p_v[4];
+      double q_v[4];
+      x[i] = save+eps;
+      double r = rx_func->val(x.data());
+      p_v[0] = (1-br_func->val(&r))*ex_func->val(x.data());
+      q_v[0] = (1-br_func->val(&r))*fx_func->val(x.data());
+      x[i] = save - eps;
+      p_v[1] = (1-br_func->val(&r))*ex_func->val(x.data());
+      q_v[1] = (1-br_func->val(&r))*fx_func->val(x.data());
+      x[i] = save+2*eps;
+      p_v[2] = (1-br_func->val(&r))*ex_func->val(x.data());
+      q_v[2] = (1-br_func->val(&r))*fx_func->val(x.data());
+      x[i] = save - 2*eps;
+      p_v[3] = (1-br_func->val(&r))*ex_func->val(x.data());
+      q_v[3] = (1-br_func->val(&r))*fx_func->val(x.data());
+      pv[i] -= (8*(p_v[0]-p_v[1])-p_v[2]+p_v[3])/(12*eps);
+      qv[i] -= (8*(q_v[0]-q_v[1])-q_v[2]+q_v[3])/(12*eps);
+    }
+  }
+  val_expected = pv.cross(qv);
+}
+
 void testValRandom(size_t times)
 {
   bool suc = true;
@@ -144,7 +183,7 @@ void testValRandom(size_t times)
     Eigen::Vector3d x, val_vf, val_expected;
     std::shared_ptr<VectorField> vf(genRandomVectorField(x.data()));
     vf->val(x.data(), val_vf.data());
-    // caculate val_expected
+    cacuValExpected(vf, x, val_expected);
     if((val_vf-val_expected).squaredNorm() > EPS) {
       suc = false;
       std::cerr << "[ERROR]" << __FILE__ << " line: " << __LINE__  << std::endl;
