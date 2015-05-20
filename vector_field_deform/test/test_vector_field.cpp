@@ -1,6 +1,8 @@
 #include <iostream>
 
 #include <Eigen/Dense>
+#include <chrono>
+
 #include "../vector_field.h"
 
 using namespace std;
@@ -106,15 +108,50 @@ void testValSpecific()
   suc = false;
 }
 
-  void testValRandom(size_t times)
-  {
-    bool suc = true;
-    //body
-    //if(suc) { std::cout << "[INFO]" << __FUNCTION__ << "passed!" << std::endl; }
+static VectorField* genRandomVectorField()
+{
+  VectorField *vf = new VectorField();
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  std::default_random_engine generator (seed);
+  std::uniform_real_distribution<double> distribution(-100.0,100.0);
+  std::uniform_real_distribution<double> distribution_ri(0.0,10.0);
+  std::uniform_real_distribution<double> distribution_ro(10.0,30.0);
+  Eigen::Vector3d u[2], c;
+  double r[2] = {distribution_ri(generator), distribution_ro(generator)};
+  for(size_t i=0; i<3; ++i) {
+    u[0][i] = distribution(generator);
+    c[i] = distribution(generator);
   }
+  u[1][0] = -u[0][1]; u[1][1] = u[0][0]; u[1][2] = 0;
 
-  int main(int argc, char *argv[])
-  {
-    testValSpecific();
-    return 0;
-  }
+  std::shared_ptr<Function> ex_func(new LinearScalarField(u[0].data(), c.data()));
+  std::shared_ptr<Function> fx_func(new LinearScalarField(u[1].data(), c.data()));
+
+  std::shared_ptr<BlendFunc> br_func(new BlendFunc(r[0], r[1]));
+  std::shared_ptr<RegionFunc> rx_func(new SphereRegionFunc(r[0], r[1], c.data()));
+  vf.setExFunc(ex_func);
+  vf.setFxFunc(fx_func);
+  vf.setBrFunc(br_func);
+  vf.setRxFunc(rx_func);
+}
+
+void testValRandom(size_t times)
+{
+  bool suc = true;
+  do {
+    if((val_vf-val_expected).squaredNorm() > EPS) {
+      suc = false;
+      std::cerr << "[ERROR]" << __FILE__ << " line: " << __LINE__  << std::endl;
+      std::cerr <<  "val_expected:" << val_expected.transpose() << std::endl;
+      std::cerr << "val_get:" << val_vf.transpose() << std::endl;
+    }
+  } while(--times);
+
+  if(suc) { std::cout << "[INFO]" << __FUNCTION__ << "passed!" << std::endl; }
+}
+
+int main(int argc, char *argv[])
+{
+  testValSpecific();
+  return 0;
+}
