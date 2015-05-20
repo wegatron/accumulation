@@ -4,10 +4,9 @@
 
 using namespace zsw;
 
-VectorField* zsw::SphereDeformTool::genOrUpdateVectorField()
+void zsw::SphereDeformTool::updateVectorFieldAndDeform()
 {
   std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
-  return nullptr;
 }
 
 void zsw::SphereDeformTool::updateCenter(const double *new_center)
