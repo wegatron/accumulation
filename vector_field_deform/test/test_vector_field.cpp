@@ -108,11 +108,11 @@ void testValSpecific()
   suc = false;
 }
 
-static VectorField* genRandomVectorField()
+static VectorField* genRandomVectorField(double *x)
 {
   VectorField *vf = new VectorField();
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-  std::default_random_engine generator (seed);
+  std::default_random_engine generator(seed);
   std::uniform_real_distribution<double> distribution(-100.0,100.0);
   std::uniform_real_distribution<double> distribution_ri(0.0,10.0);
   std::uniform_real_distribution<double> distribution_ro(10.0,30.0);
@@ -121,6 +121,7 @@ static VectorField* genRandomVectorField()
   for(size_t i=0; i<3; ++i) {
     u[0][i] = distribution(generator);
     c[i] = distribution(generator);
+    x[i] = distribution(generator);
   }
   u[1][0] = -u[0][1]; u[1][1] = u[0][0]; u[1][2] = 0;
 
@@ -129,16 +130,21 @@ static VectorField* genRandomVectorField()
 
   std::shared_ptr<BlendFunc> br_func(new BlendFunc(r[0], r[1]));
   std::shared_ptr<RegionFunc> rx_func(new SphereRegionFunc(r[0], r[1], c.data()));
-  vf.setExFunc(ex_func);
-  vf.setFxFunc(fx_func);
-  vf.setBrFunc(br_func);
-  vf.setRxFunc(rx_func);
+  vf->setExFunc(ex_func);
+  vf->setFxFunc(fx_func);
+  vf->setBrFunc(br_func);
+  vf->setRxFunc(rx_func);
+  return vf;
 }
 
 void testValRandom(size_t times)
 {
   bool suc = true;
   do {
+    Eigen::Vector3d x, val_vf, val_expected;
+    std::shared_ptr<VectorField> vf(genRandomVectorField(x.data()));
+    vf->val(x.data(), val_vf.data());
+    // caculate val_expected
     if((val_vf-val_expected).squaredNorm() > EPS) {
       suc = false;
       std::cerr << "[ERROR]" << __FILE__ << " line: " << __LINE__  << std::endl;
@@ -153,5 +159,6 @@ void testValRandom(size_t times)
 int main(int argc, char *argv[])
 {
   testValSpecific();
+  testValRandom(100);
   return 0;
 }
