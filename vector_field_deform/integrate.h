@@ -1,7 +1,8 @@
 #ifndef INTEGRATE_H
 #define INTEGRATE_H
 
-#include <queue>
+#include <vector>
+#include <Eigen/Dense>
 
 #include "vector_field.h"
 
@@ -13,7 +14,7 @@ namespace zsw {
     Eigen::Vector3d operator()(const double* pos) const;
     void pushVectorField(std::shared_ptr<VectorField> vf);
   private:
-      std::queue<std::shared_ptr<VectorField>> vfs_;
+      std::vector<std::shared_ptr<VectorField>> vfs_;
   };
 }
 

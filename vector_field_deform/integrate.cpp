@@ -13,24 +13,26 @@ Eigen::Vector3d zsw::VectorFieldIntegrate::operator()(const double* pos) const
   }
 
   Eigen::Vector3d ori_pos, tmp_pos;
-  std::copy(pos, pos+3, oir_pos.data());
+  std::copy(pos, pos+3, ori_pos.data());
   Eigen::Vector3d k1;
   vfs_[vfs_.size()-3]->val(pos, k1.data());
 
   Eigen::Vector3d k2;
-  tmp_pos = oir_pos + h*k1;
+  tmp_pos = ori_pos + h*k1;
   vfs_[vfs_.size()-2]->val(tmp_pos.data(), k2.data());
 
   Eigen::Vector3d k3;
-  tmp_pos = oir_pos +2*h*(-k1+2*k2);
+  tmp_pos = ori_pos +2*h*(-k1+2*k2);
   vfs_[vfs_.size()-1]->val(tmp_pos.data(), k3.data());
   return (k1+4*k2+k3)/6*h;
 }
 
 void zsw::VectorFieldIntegrate::pushVectorField(std::shared_ptr<VectorField> vf)
 {
+  #if 0
   if(vfs_.size()>=3) {
-    vfs_->pop();
+    vfs_.erase(vfs_.begin()+vfs_.size()-1);
   }
-  vfs_->push(vf);
+  # endif
+  vfs_.push_back(vf);
 }
