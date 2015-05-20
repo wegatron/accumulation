@@ -1,0 +1,65 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 13.04.2 ] */
+
+/* [wxMaxima: input   start ] */
+load(vect);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+load(eigen);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+bf(r,ri, ro) := (4*(r-ri)^3*(ro-r)+(r-ri)^4)/(ro-ri)^4;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+rf(x, c) := sqrt((x-c).(x-c));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+lf(x, u, c, ri, ro) := (1-bf(rf(x, c), ri, ro))*u.(x-c);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+x : matrix([-10.3, 42.1, -4.1]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+c : matrix([-14.13, 43.2, -6.3]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ri : 4.3;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ro : 6.9;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+u0 : matrix([-3.34, -8.3, 6.7]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+u1 : matrix([ 1.3, 5.8, -7.833134]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+xx: genmatrix(xx, 1,3);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+xx[1,1];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+diff(lf(xx,u0,c,ri,ro),xx[1,1]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+kill(all);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

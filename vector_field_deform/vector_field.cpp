@@ -29,14 +29,14 @@ void zsw::VectorField::val(const double *x, double *val)
     std::copy(res.data(), res.data()+3, val);
   } else {
     Eigen::Vector3d jac_e, jac_f, jac_b, res;
-    double g_b_r = 0.0;
     ex_func_->jac(x, jac_e.data());
     fx_func_->jac(x, jac_f.data());
     rx_func_->jac(x, jac_b.data());
-    br_func_->jac(x, &g_b_r);
+    double g_b_r = 0.0, r = rx_func_->val(x);
+    br_func_->jac(&r, &g_b_r);
     jac_b *= g_b_r;
 
-    res = (-jac_b*ex_func_->val(x) - br_func_->val(x)*jac_e).cross(-jac_b*fx_func_->val(x)-br_func_->val(x)*jac_f);
+    res = (-jac_b*ex_func_->val(x) - br_func_->val(&r)*jac_e).cross(-jac_b*fx_func_->val(x)-br_func_->val(&r)*jac_f);
     std::copy(res.data(), res.data()+3, val);
   }
 }

@@ -38,7 +38,7 @@ zsw::BlendFunc::BlendFunc(const double ri, const double ro)
 double zsw::BlendFunc::val(const double *r)
 {
   if(*r<ri_ || *r>ro_) {
-    std::cerr << "[ERROR] r in blend func should in (ri,ro):" << ri_ << " " << ro_ << std::endl;
+    std::cerr << "[ERROR] r in blend func should in (ri,ro):" << ri_ << " " << ro_ <<  " " << *r << std::endl;
     throw std::logic_error("[ERROR] r in blend func should in (ri,ro):"+std::to_string(ri_)+" "+std::to_string(ro_));
   }
   double v= (*r-ri_)/(ro_-ri_);
