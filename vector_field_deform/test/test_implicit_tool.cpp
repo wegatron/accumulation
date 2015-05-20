@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
   vf_deformer->loadModel("/home/wegatron/input.obj");
   // creatr implicit_tool
   double center[3] = {0,0,0};
-  SphereDeformTool spdf_tool(center);
+  SphereDeformTool spdf_tool(center, 2, 4);
   spdf_tool.setDeformer(vf_deformer);
   double cs[3][3] = {{0.05,0,0}, {0.1,0,0}, {0.2,0,0}};
   // doing deform

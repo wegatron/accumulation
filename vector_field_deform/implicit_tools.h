@@ -27,15 +27,15 @@ namespace zsw{
   class SphereDeformTool final : public ImplicitTool
   {
   public:
-    SphereDeformTool(const double *center) {
+    SphereDeformTool(const double *center, const double ri, const double ro) {
       center_[0][0] = center[0]; center_[0][1] = center[1]; center_[0][2] = center[2];
       center_[1][0] = center_[1][1] = center_[1][2] = 0.0;
-      r_[0] = r_[1] = 0.0;
+      r_[0] = ri; r_[1] = ro;
       now = 1;
     }
     void updateVectorFieldAndDeform();
     void updateCenter(const double *new_center);
-    void setDeformer(std::shared_ptr<Deformer> deformer) { deformer_ = deformer; }
+    void setDeformer(std::shared_ptr<VfDeformer> deformer) { deformer_ = deformer; }
   private:
     std::shared_ptr<VfDeformer> deformer_;
     unsigned short now;
