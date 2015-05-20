@@ -114,8 +114,8 @@ static VectorField* genRandomVectorField(double *x)
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator(seed);
   std::uniform_real_distribution<double> distribution(-100.0,100.0);
-  std::uniform_real_distribution<double> distribution_ri(0.0,10.0);
-  std::uniform_real_distribution<double> distribution_ro(10.0,30.0);
+  std::uniform_real_distribution<double> distribution_ri(0.0,100.0);
+  std::uniform_real_distribution<double> distribution_ro(100.0,300.0);
   Eigen::Vector3d u[2], c;
   double r[2] = {distribution_ri(generator), distribution_ro(generator)};
   for(size_t i=0; i<3; ++i) {
@@ -124,7 +124,11 @@ static VectorField* genRandomVectorField(double *x)
     x[i] = distribution(generator);
   }
   u[1][0] = -u[0][1]; u[1][1] = u[0][0]; u[1][2] = 0;
-
+  // std::cout << "u[0]:" << u[0].transpose() << std::endl;
+  // std::cout << "u[1]:" << u[1].transpose() << std::endl;
+  // std::cout << "c:" << c.transpose() << std::endl;
+  // std::cout << "x:" << x[0] << " " << x[1] << " " << x[2] << std::endl;
+  // std::cout << "r:" << r[0] << "  " << r[1] << std::endl;
   std::shared_ptr<Function> ex_func(new LinearScalarField(u[0].data(), c.data()));
   std::shared_ptr<Function> fx_func(new LinearScalarField(u[1].data(), c.data()));
 
@@ -145,12 +149,15 @@ static void cacuValExpected(std::shared_ptr<VectorField> vf, Eigen::Vector3d &x,
   std::shared_ptr<RegionFunc> rx_func = vf->getRxFunc();
   std::shared_ptr<BlendFunc> br_func = vf->getBrFunc();
   if(rx_func->judgeRegion(x.data()) == zsw::RegionFunc::INNER_REGION) {
+    std::cerr << "InnerRegion" << std::endl;
     ex_func->jac(x.data(), pv.data());
     fx_func->jac(x.data(), qv.data());
   } else if(rx_func->judgeRegion(x.data()) == zsw::RegionFunc::OUTER_REGION) {
+    std::cerr << "OutRegion" << std::endl;
     pv.setZero();
     qv.setZero();
   } else {
+    std::cerr << "BlendRegion" << std::endl;
     const double eps = 1e-6;
     for(size_t i=0; i<3; ++i) {
       double save = x[i];
@@ -161,12 +168,15 @@ static void cacuValExpected(std::shared_ptr<VectorField> vf, Eigen::Vector3d &x,
       p_v[0] = (1-br_func->val(&r))*ex_func->val(x.data());
       q_v[0] = (1-br_func->val(&r))*fx_func->val(x.data());
       x[i] = save - eps;
+      r = rx_func->val(x.data());
       p_v[1] = (1-br_func->val(&r))*ex_func->val(x.data());
       q_v[1] = (1-br_func->val(&r))*fx_func->val(x.data());
       x[i] = save+2*eps;
+      r = rx_func->val(x.data());
       p_v[2] = (1-br_func->val(&r))*ex_func->val(x.data());
       q_v[2] = (1-br_func->val(&r))*fx_func->val(x.data());
       x[i] = save - 2*eps;
+      r = rx_func->val(x.data());
       p_v[3] = (1-br_func->val(&r))*ex_func->val(x.data());
       q_v[3] = (1-br_func->val(&r))*fx_func->val(x.data());
       pv[i] -= (8*(p_v[0]-p_v[1])-p_v[2]+p_v[3])/(12*eps);
@@ -189,6 +199,7 @@ void testValRandom(size_t times)
       std::cerr << "[ERROR]" << __FILE__ << " line: " << __LINE__  << std::endl;
       std::cerr <<  "val_expected:" << val_expected.transpose() << std::endl;
       std::cerr << "val_get:" << val_vf.transpose() << std::endl;
+      break;
     }
   } while(--times);
 
