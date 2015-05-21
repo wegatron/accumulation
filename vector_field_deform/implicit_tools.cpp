@@ -167,7 +167,7 @@ void zsw::writeVtk(const std::string& file_path, Eigen::Matrix<double, 3, Eigen:
 {
   vector<Eigen::Vector3d> vverts;
   vector<Eigen::Vector3i> vtris;
-  UTILITY::VTKWriter writer(false); // binary = true
+  UTILITY::VTKWriter writer(true); // binary = true
 
   for(size_t i=0; i<verts.cols(); ++i) {
     Eigen::Vector3d tmp_v = verts.block<3,1>(0,i);
