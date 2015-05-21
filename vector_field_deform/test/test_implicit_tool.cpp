@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
   double center[3] = {0,1,0};
   SphereDeformTool spdf_tool(center, 0.01, 0.8);
   spdf_tool.setDeformer(vf_deformer);
-  double trans_vec[3][3] = {{0,0.1,0}, {0,0.1,0}, {0,0.1,0}};
+  double trans_vec[3][3] = {{0,0.2,0}, {0,0.1,0}, {0,0.1,0}};
   // doing deform
   {
     spdf_tool.translateAndDeform(trans_vec[0]);
