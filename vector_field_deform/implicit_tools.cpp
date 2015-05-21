@@ -28,7 +28,7 @@ void zsw::SphereDeformTool::calcU(const Eigen::Vector3d &u_dest, Eigen::Vector3d
     break;
   }
   u1 = u_dest.cross(u0);
-  const double eps 1e-6;
+  const double eps = 1e-6;
   if((u0.cross(u1)-u_dest).squaredNorm() > eps) {
     u1 = -u1;
   }
@@ -49,6 +49,7 @@ void zsw::SphereDeformTool::updateVectorFieldAndDeform()
   calcU(u[2], u[0], u[1]);
   Eigen::Vector3d tmp_center;
   tmp_center << center_[0], center_[1], center_[2];
+  u[2] /= time_slice_;
   for(size_t i=0; i<time_slice_; ++i) {
     // generate ex, fx, rx, br set into vf
     std::shared_ptr<VectorField> vf(new VectorField());
@@ -62,6 +63,7 @@ void zsw::SphereDeformTool::updateVectorFieldAndDeform()
     vf->setBrFunc(br_func);
     vf->setRxFunc(rx_func);
     deformer_->pushVectorFieldAndDeform(vf);
+    tmp_center += u[2];
   }
 }
 
@@ -86,5 +88,11 @@ void zsw::VfDeformer::saveModel(const std::string& fille_path)
 
 void zsw::VfDeformer::pushVectorFieldAndDeform(std::shared_ptr<VectorField> vf)
 {
-  std::cerr << "Function " << __FUNCTION__ << " in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  assert(vf_integrator_ != nullptr);
+  vf_integrator_->pushVectorField(vf);
+  assert(verts_.cols()!=0);
+  for(size_t i=0; i<verts_.cols(); ++i) {
+    Eigen::Vector3d pos = verts_.block<3,1>(0,i);
+    verts_.block<3,1>(0,i) += (*vf_integrator_)(pos.data());
+  }
 }

@@ -16,6 +16,8 @@ namespace zsw{
     void pushVectorFieldAndDeform(std::shared_ptr<VectorField> vf);
   private:
     std::shared_ptr<VectorFieldIntegrator> vf_integrator_;
+    Eigen::Matrix<double, 3, Eigen::Dynamic> verts_; // default column major
+    Eigen::Matrix<size_t, 3, Eigen::Dynamic> tris_;
   };
 
   class ImplicitTool
@@ -34,7 +36,7 @@ namespace zsw{
     }
     void setDeformer(std::shared_ptr<VfDeformer> deformer);
     void translateAndDeform(const double *trans_vec);
-    void setNofSingleStep(size_t n) { n_ = n; }
+    void setTimeSlice(size_t time_slice) { time_slice_ = time_slice; }
   protected:
     void updateVectorFieldAndDeform();
   private:
