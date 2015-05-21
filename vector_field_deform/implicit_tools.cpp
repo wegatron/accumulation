@@ -1,9 +1,10 @@
 #include "implicit_tools.h"
 
 #include <iostream>
-
+#include <fstream>
 #include <Eigen/Dense>
 
+using namespace std;
 using namespace zsw;
 
 void zsw::SphereDeformTool::calcU(const Eigen::Vector3d &u_dest, Eigen::Vector3d &u0, Eigen::Vector3d &u1)
@@ -32,6 +33,7 @@ void zsw::SphereDeformTool::calcU(const Eigen::Vector3d &u_dest, Eigen::Vector3d
   if((u0.cross(u1)-u_dest).squaredNorm() > eps) {
     u1 = -u1;
   }
+  assert((u0.cross(u1)-u_dest).squaredNorm() < eps);
 }
 
 void zsw::SphereDeformTool::setDeformer(std::shared_ptr<VfDeformer> deformer)
@@ -78,12 +80,61 @@ void zsw::SphereDeformTool::translateAndDeform(const double *trans_vec)
 
 void zsw::VfDeformer::loadModel(const std::string& file_path)
 {
-  std::cerr << "Function " << __FUNCTION__ << " in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  ifstream ifs(file_path);
+  if(!ifs) {
+    cerr << "can not openfile: " << file_path << endl;
+    exit(1);
+  }
+
+  string str;
+  double tmp_double[3];
+  size_t tmp_int;
+
+  vector<double> verts_v;
+  vector<size_t> tris_v;
+
+  while(!ifs.eof()) {
+    ifs >> str;
+    if(str == "v") {
+      ifs >> tmp_double[0] >> tmp_double[1] >> tmp_double[2];
+      verts_v.push_back(tmp_double[0]);
+      verts_v.push_back(tmp_double[1]);
+      verts_v.push_back(tmp_double[2]);
+    }
+
+    if(str=="f") {
+      for (size_t i=0; i<3; ++i) {
+        ifs >> str;
+        stringstream ss(str);
+        ss >> tmp_int;
+        tris_v.push_back(tmp_int);
+      }
+    }
+  }
+
+  ifs.close();
+  assert(verts_v.size()%3==0); assert(tris_v.size()%3==0);
+  verts_.resize(3,verts_v.size()/3);
+  tris_.resize(3,tris_v.size()/3);
+
+  std::copy(verts_v.begin(), verts_v.end(), verts_.data());
+  std::copy(tris_v.begin(), tris_v.end(), tris_.data());
 }
 
-void zsw::VfDeformer::saveModel(const std::string& fille_path)
+void zsw::VfDeformer::saveModel(const std::string& file_path)
 {
-  std::cerr << "Function " << __FUNCTION__ << " in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  ofstream ofs(file_path);
+  if(!ofs) {
+    cerr << "can open file: " << file_path << " for write!" << endl;
+    exit(1);
+  }
+  for (int i=0; i<verts_.cols(); ++i) {
+    ofs << "v " << verts_(0,i) << " " << verts_(1,i) << " " << verts_(2,i) << endl;
+  }
+  for (int i=0; i<tris_.cols(); ++i) {
+    ofs << "f " << tris_(0,i) << " " << tris_(1,i) << " " << tris_(2,i) << endl;
+  }
+  ofs.close();
 }
 
 void zsw::VfDeformer::pushVectorFieldAndDeform(std::shared_ptr<VectorField> vf)

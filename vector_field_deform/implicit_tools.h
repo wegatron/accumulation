@@ -10,7 +10,7 @@ namespace zsw{
   public:
     VfDeformer() {}
     void loadModel(const std::string& file_path);
-    void saveModel(const std::string& fille_path);
+    void saveModel(const std::string& file_path);
     void setVectorFieldIntegrator(std::shared_ptr<VectorFieldIntegrator> vf_integrator) { vf_integrator_ = vf_integrator; }
     std::shared_ptr<VectorFieldIntegrator> getVectorFieldIntegrator() { return vf_integrator_; }
     void pushVectorFieldAndDeform(std::shared_ptr<VectorField> vf);
