@@ -6,7 +6,7 @@
 namespace zsw{
 
   void writeVtk(const std::string& file_path, Eigen::Matrix<double, 3, Eigen::Dynamic> &verts,
-                Eigen::Matrix<size_t, 3, Eigen::Dynamic>& tris);
+                const Eigen::Matrix<size_t, 3, Eigen::Dynamic>& tris);
 
   class VfDeformer final
   {
@@ -17,10 +17,13 @@ namespace zsw{
     void setVectorFieldIntegrator(std::shared_ptr<VectorFieldIntegrator> vf_integrator) { vf_integrator_ = vf_integrator; }
     std::shared_ptr<VectorFieldIntegrator> getVectorFieldIntegrator() { return vf_integrator_; }
     void pushVectorFieldAndDeform(std::shared_ptr<VectorField> vf);
+
+    Eigen::Matrix<double, 3, Eigen::Dynamic>& getVerts() { return verts_; }
+    Eigen::Matrix<size_t, 3, Eigen::Dynamic>& getTris() { return tris_; }
   private:
     std::shared_ptr<VectorFieldIntegrator> vf_integrator_;
     Eigen::Matrix<double, 3, Eigen::Dynamic> verts_; // default column major
-    Eigen::Matrix<size_t, 3, Eigen::Dynamic> tris_;
+    Eigen::Matrix<size_t, 3, Eigen::Dynamic> tris_; // index start from 0
   };
 
   class ImplicitTool

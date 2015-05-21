@@ -17,11 +17,11 @@ namespace UTILITY{
 	  return N;
 	}
 	T &operator [](int i){
-	  assert_in(i,0,N-1);
+	  // assert_in(i,0,N-1);
 	  return d[i];
 	}
 	const T &operator[](int i)const{
-	  assert_in(i,0,N-1);
+	  // assert_in(i,0,N-1);
 	  return d[i];
 	}
   private:
@@ -135,7 +135,7 @@ namespace UTILITY{
 	void addLines(const vector<VECTOR_2I,ALLOCATOR> &lines){
 
 	  if (lines.size() > 0)
-		assert_eq(lines[0].size(),2);
+		// assert_eq(lines[0].size(),2);
 	  if (_binary){
 		for (int i = 0; i < lines.size(); ++i){
 		  vtkWriteBinary(_cells,2);
@@ -164,7 +164,7 @@ namespace UTILITY{
 	void addTriangles(const vector<VECTOR_3I,ALLOCATOR> &faces){
 
 	  if (faces.size() > 0)
-		assert_eq(faces[0].size(),3);
+		// assert_eq(faces[0].size(),3);
 	  if (_binary){
 		for (int i = 0; i < faces.size(); ++i){
 		  vtkWriteBinary(_cells,3);
@@ -194,7 +194,7 @@ namespace UTILITY{
 	void addTets(const vector<VECTOR_4I,ALLOCATOR> &tets){
 
 	  if (tets.size() > 0)
-		assert_eq(tets[0].size(),4);
+		// assert_eq(tets[0].size(),4);
 
 	  if (_binary){
 		for (int i = 0; i < tets.size(); ++i){
@@ -256,7 +256,7 @@ namespace UTILITY{
 	template<typename VECTOR,typename VECTOR3D>
 	void convetVec2VV3d(const VECTOR &vec,VECTOR3D &vvec)const{
 
-	  assert_eq(vec.size()%3,0);
+	  // assert_eq(vec.size()%3,0);
 	  vvec.resize(vec.size()/3);
 	  for (size_t i = 0; i < vvec.size(); ++i){
 		vvec[i][0] = vec[i*3+0];
@@ -268,7 +268,7 @@ namespace UTILITY{
 	template<typename VECTOR,typename VECTOR2D>
 	void convetVec2VV2d(const VECTOR &vec,VECTOR2D &vvec)const{
 
-	  assert_eq(vec.size()%2,0);
+	  // assert_eq(vec.size()%2,0);
 	  vvec.resize(vec.size()/2);
 	  for (size_t i = 0; i < vvec.size(); ++i){
 		vvec[i][0] = vec[i*2+0];

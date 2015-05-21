@@ -77,6 +77,9 @@ void zsw::SphereDeformTool::updateVectorFieldAndDeform()
     vf->setRxFunc(rx_func);
     deformer_->pushVectorFieldAndDeform(vf);
     tmp_center += u[2];
+
+    // sequence out put
+    writeVtk("/home/wegatron/tmp/se_"+std::to_string(i)+".vtk", deformer_->getVerts(), deformer_->getTris());
   }
 }
 
@@ -118,7 +121,7 @@ void zsw::VfDeformer::loadModel(const std::string& file_path)
         ifs >> str;
         stringstream ss(str);
         ss >> tmp_int;
-        tris_v.push_back(tmp_int);
+        tris_v.push_back(tmp_int-1);
       }
     }
   }
@@ -143,7 +146,7 @@ void zsw::VfDeformer::saveModel(const std::string& file_path)
     ofs << "v " << verts_(0,i) << " " << verts_(1,i) << " " << verts_(2,i) << endl;
   }
   for (int i=0; i<tris_.cols(); ++i) {
-    ofs << "f " << tris_(0,i) << " " << tris_(1,i) << " " << tris_(2,i) << endl;
+    ofs << "f " << tris_(0,i)+1 << " " << tris_(1,i)+1 << " " << tris_(2,i)+1 << endl;
   }
   ofs.close();
 }
@@ -160,11 +163,23 @@ void zsw::VfDeformer::pushVectorFieldAndDeform(std::shared_ptr<VectorField> vf)
 }
 
 void zsw::writeVtk(const std::string& file_path, Eigen::Matrix<double, 3, Eigen::Dynamic> &verts,
-                Eigen::Matrix<size_t, 3, Eigen::Dynamic>& tris)
+                const Eigen::Matrix<size_t, 3, Eigen::Dynamic>& tris)
 {
   vector<Eigen::Vector3d> vverts;
   vector<Eigen::Vector3i> vtris;
-  VTKWriter writer(true); // binary = true
+  UTILITY::VTKWriter writer(false); // binary = true
+
+  for(size_t i=0; i<verts.cols(); ++i) {
+    Eigen::Vector3d tmp_v = verts.block<3,1>(0,i);
+    vverts.push_back(tmp_v);
+  }
+
+  for(size_t i=0; i<tris.cols(); ++i) {
+    Eigen::Matrix<size_t, 3, 1> tmp_v0 = tris.block<3,1>(0,i);
+    Eigen::Vector3i tmp_v;
+    tmp_v << tmp_v0[0], tmp_v0[1], tmp_v0[2];
+    vtris.push_back(tmp_v);
+  }
 
   writer.addPoints(vverts);
   writer.addTriangles(vtris);
