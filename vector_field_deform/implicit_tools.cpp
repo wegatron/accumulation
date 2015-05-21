@@ -60,8 +60,7 @@ void zsw::SphereDeformTool::updateVectorFieldAndDeform()
     vf->setBrFunc(br_func);
     vf->setRxFunc(rx_func);
 
-    deformer_->pushVectorField(vf);
-    deformer_->deform();
+    deformer_->pushVectorFieldAndDeform(vf);
   }
 }
 
@@ -76,20 +75,15 @@ void zsw::SphereDeformTool::translateAndDeform(const double *trans_vec)
 
 void zsw::VfDeformer::loadModel(const std::string& file_path)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  std::cerr << "Function " << __FUNCTION__ << " in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
 }
 
 void zsw::VfDeformer::saveModel(const std::string& fille_path)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  std::cerr << "Function " << __FUNCTION__ << " in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
 }
 
-void zsw::VfDeformer::pushVectorField(std::shared_ptr<VectorField> vf)
+void zsw::VfDeformer::pushVectorFieldAndDeform(std::shared_ptr<VectorField> vf)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
-}
-
-void zsw::VfDeformer::deform()
-{
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  std::cerr << "Function " << __FUNCTION__ << " in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
 }

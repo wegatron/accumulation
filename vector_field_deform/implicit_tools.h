@@ -13,8 +13,7 @@ namespace zsw{
     void saveModel(const std::string& fille_path);
     void setVectorFieldIntegrator(std::shared_ptr<VectorFieldIntegrator> vf_integrator) { vf_integrator_ = vf_integrator; }
     std::shared_ptr<VectorFieldIntegrator> getVectorFieldIntegrator() { return vf_integrator_; }
-    void pushVectorField(std::shared_ptr<VectorField> vf);
-    void deform();
+    void pushVectorFieldAndDeform(std::shared_ptr<VectorField> vf);
   private:
     std::shared_ptr<VectorFieldIntegrator> vf_integrator_;
   };
