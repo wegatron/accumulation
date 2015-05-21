@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <Eigen/Dense>
+#include "VTKWriter.h"
 
 using namespace std;
 using namespace zsw;
@@ -62,6 +63,7 @@ void zsw::SphereDeformTool::updateVectorFieldAndDeform()
   tmp_center << center_[0], center_[1], center_[2];
   u[2] /= time_slice_;
   for(size_t i=0; i<time_slice_; ++i) {
+    std::cout << "step " << i << std::endl;
     // generate ex, fx, rx, br set into vf
     std::shared_ptr<VectorField> vf(new VectorField());
     std::shared_ptr<Function> ex_func(new LinearScalarField(u[0].data(), tmp_center.data()));
@@ -155,4 +157,17 @@ void zsw::VfDeformer::pushVectorFieldAndDeform(std::shared_ptr<VectorField> vf)
     Eigen::Vector3d pos = verts_.block<3,1>(0,i);
     verts_.block<3,1>(0,i) += (*vf_integrator_)(pos.data());
   }
+}
+
+void zsw::writeVtk(const std::string& file_path, Eigen::Matrix<double, 3, Eigen::Dynamic> &verts,
+                Eigen::Matrix<size_t, 3, Eigen::Dynamic>& tris)
+{
+  vector<Eigen::Vector3d> vverts;
+  vector<Eigen::Vector3i> vtris;
+  VTKWriter writer(true); // binary = true
+
+  writer.addPoints(vverts);
+  writer.addTriangles(vtris);
+  bool suc = writer.write(file_path);
+  assert(suc);
 }

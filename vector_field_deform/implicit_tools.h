@@ -5,6 +5,9 @@
 
 namespace zsw{
 
+  void writeVtk(const std::string& file_path, Eigen::Matrix<double, 3, Eigen::Dynamic> &verts,
+                Eigen::Matrix<size_t, 3, Eigen::Dynamic>& tris);
+
   class VfDeformer final
   {
   public:
@@ -32,7 +35,7 @@ namespace zsw{
     SphereDeformTool(const double *center, const double ri, const double ro) {
       center_[0] = center[0]; center_[1] = center[1]; center_[2] = center[2];
       r_[0] = ri; r_[1] = ro;
-      time_slice_  = 1000;
+      time_slice_  = 100;
     }
     void setDeformer(std::shared_ptr<VfDeformer> deformer);
     void translateAndDeform(const double *trans_vec);
