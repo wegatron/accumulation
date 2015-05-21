@@ -5,25 +5,30 @@
 using namespace std;
 using namespace zsw;
 
-int main(int argc, char *argv[])
+void testPlane()
 {
   // create integrator
   std::shared_ptr<VectorFieldIntegrator> vf_integrator(new AdVectorIntegrator());
   // create deformer
   std::shared_ptr<VfDeformer> vf_deformer(new VfDeformer());
   vf_deformer->setVectorFieldIntegrator(vf_integrator);
-  vf_deformer->loadModel("/home/wegatron/tmp/input_sphere.obj");
+  vf_deformer->loadModel("/home/wegatron/tmp/plane_input.obj");
   // creatr implicit_tool
-  double center[3] = {0,1,0};
+  double center[3] = {0,0,0};
   SphereDeformTool spdf_tool(center, 0.01, 0.8);
   spdf_tool.setDeformer(vf_deformer);
-  double trans_vec[3][3] = {{0,0.2,0}, {0,0.1,0}, {0,0.1,0}};
+  double trans_vec[3][3] = {{0,0.1,0}, {0,0.1,0}, {0,0.1,0}};
   // doing deform
   {
     spdf_tool.translateAndDeform(trans_vec[0]);
-    // spdf_tool.translateAndDeform(trans_vec[1]);
-    // spdf_tool.translateAndDeform(trans_vec[2]);
+    spdf_tool.translateAndDeform(trans_vec[1]);
+    spdf_tool.translateAndDeform(trans_vec[2]);
   }
-  vf_deformer->saveModel("/home/wegatron/tmp/output_sphere.obj");
+  vf_deformer->saveModel("/home/wegatron/tmp/plane_final.obj");
+}
+
+int main(int argc, char *argv[])
+{
+  testPlane();
   return 0;
 }

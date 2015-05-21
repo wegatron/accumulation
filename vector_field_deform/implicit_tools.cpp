@@ -79,7 +79,10 @@ void zsw::SphereDeformTool::updateVectorFieldAndDeform()
     tmp_center += u[2];
 
     // sequence out put
-    writeVtk("/home/wegatron/tmp/se_"+std::to_string(i)+".vtk", deformer_->getVerts(), deformer_->getTris());
+    #if 1
+    static size_t counter = -1;
+    writeVtk("/home/wegatron/tmp/se_"+std::to_string(++counter)+".vtk", deformer_->getVerts(), deformer_->getTris());
+    #endif
   }
 }
 
