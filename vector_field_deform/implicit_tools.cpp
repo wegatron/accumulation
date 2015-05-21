@@ -40,20 +40,20 @@ void zsw::SphereDeformTool::setDeformer(std::shared_ptr<VfDeformer> deformer)
 void zsw::SphereDeformTool::updateVectorFieldAndDeform()
 {
   assert(deformer_ != nullptr);
-  // generate ex, fx, rx, br set into vf
   Eigen::Vector3d u[3];
-  u[2] << center_[cur_][0]-center_[!cur_][0], center_[cur_][1]-center_[!cur_][1], center_[cur][2]-center_[!cur_][2]; // vector field's' direction in inner region
+  u[2] << trans_vec_[0], trans_vec_[1], trans_vec_[2];
   calcU(u[2], u[0], u[1]);
-  // every single step's u'
+  // every single step's u
   u[0] /= n_; u[1] /= n_;
   Eigen::Vector3d tmp_center;
-  tmp_center << center_[!cur][0], center_[!cur][1], center_[!cur][2];
+  tmp_center << center_[0], center_[1], center_[2];
   for(size_t i=0; i<n_; ++i) {
+    // generate ex, fx, rx, br set into vf
     std::shared_ptr<VectorField> vf(new VectorField());
     std::shared_ptr<Function> ex_func(new LinearScalarField(u[0].data(), tmp_center.data()));
     std::shared_ptr<Function> fx_func(new LinearScalarField(u[1].data(), tmp_center.data()));
-    std::shared_ptr<RegionFunc> rx_func(new SphereRegionFunc(ri_, ro_, tmp_center.data()));
-    std::shared_ptr<BlendFunc> br_func(new BlendFunc(ri, ro));
+    std::shared_ptr<RegionFunc> rx_func(new SphereRegionFunc(r_[0], r_[1], tmp_center.data()));
+    std::shared_ptr<BlendFunc> br_func(new BlendFunc(r_[0], r_[1]));
 
     vf->setExFunc(ex_func);
     vf->setFxFunc(fx_func);
@@ -65,12 +65,13 @@ void zsw::SphereDeformTool::updateVectorFieldAndDeform()
   }
 }
 
-void zsw::SphereDeformTool::updateCenter(const double *new_center)
+void zsw::SphereDeformTool::translateAndDeform(const double *trans_vec)
 {
-  cur_ = !cur_;
-  center_[cur_][0] = new_center[0];
-  center_[cur_][1] = new_center[1];
-  center_[cur_][2] = new_center[2];
+  trans_vec_ = trans_vec;
+  updateVectorFieldAndDeform();
+  center_[0] += trans_vec[0];
+  center_[1] += trans_vec[1];
+  center_[2] += trans_vec[2];
 }
 
 void zsw::VfDeformer::loadModel(const std::string& file_path)

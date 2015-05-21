@@ -21,7 +21,7 @@ namespace zsw{
 
   class ImplicitTool
   {
-  public:
+  protected:
     virtual void updateVectorFieldAndDeform() = 0;
   };
 
@@ -29,23 +29,24 @@ namespace zsw{
   {
   public:
     SphereDeformTool(const double *center, const double ri, const double ro) {
-      center_[0][0] = center[0]; center_[0][1] = center[1]; center_[0][2] = center[2];
-      center_[1][0] = center_[1][1] = center_[1][2] = 0.0;
+      center_[0] = center[0]; center_[1] = center[1]; center_[2] = center[2];
       r_[0] = ri; r_[1] = ro;
-      cur_ = 0;
       n_  = 1000;
     }
     void setDeformer(std::shared_ptr<VfDeformer> deformer);
-    void updateVectorFieldAndDeform();
-    void updateCenter(const double *new_center);
+    void translateAndDeform(const double *trans_vec);
     void setNofSingleStep(size_t n) { n_ = n; }
+  protected:
+    void updateVectorFieldAndDeform();
   private:
     void calcU(const Eigen::Vector3d &u_dest, Eigen::Vector3d &u0, Eigen::Vector3d &u1);
     std::shared_ptr<VfDeformer> deformer_;
-    unsigned short cur_;
-    double center_[2][3];
+    double center_[3];
     double r_[2];
     size_t n_;
+
+    // translate vector
+    const double* trans_vec_;
   };
 
 }
