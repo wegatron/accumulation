@@ -28,13 +28,17 @@ void zsw::SphereDeformTool::calcU(const Eigen::Vector3d &u_dest, Eigen::Vector3d
     break;
   }
   u1 = u_dest.cross(u0);
+  const double eps 1e-6;
+  if((u0.cross(u1)-u_dest).squaredNorm() > eps) {
+    u1 = -u1;
+  }
 }
 
 void zsw::SphereDeformTool::setDeformer(std::shared_ptr<VfDeformer> deformer)
 {
   assert(deformer != nullptr);
   deformer_ = deformer;
-  deformer_->getVectorFieldIntegrator()->setStep(1.0/n_);
+  deformer_->getVectorFieldIntegrator()->setStep(1.0/time_slice_);
 }
 
 void zsw::SphereDeformTool::updateVectorFieldAndDeform()
@@ -43,11 +47,9 @@ void zsw::SphereDeformTool::updateVectorFieldAndDeform()
   Eigen::Vector3d u[3];
   u[2] << trans_vec_[0], trans_vec_[1], trans_vec_[2];
   calcU(u[2], u[0], u[1]);
-  // every single step's u
-  u[0] /= n_; u[1] /= n_;
   Eigen::Vector3d tmp_center;
   tmp_center << center_[0], center_[1], center_[2];
-  for(size_t i=0; i<n_; ++i) {
+  for(size_t i=0; i<time_slice_; ++i) {
     // generate ex, fx, rx, br set into vf
     std::shared_ptr<VectorField> vf(new VectorField());
     std::shared_ptr<Function> ex_func(new LinearScalarField(u[0].data(), tmp_center.data()));
@@ -59,7 +61,6 @@ void zsw::SphereDeformTool::updateVectorFieldAndDeform()
     vf->setFxFunc(fx_func);
     vf->setBrFunc(br_func);
     vf->setRxFunc(rx_func);
-
     deformer_->pushVectorFieldAndDeform(vf);
   }
 }

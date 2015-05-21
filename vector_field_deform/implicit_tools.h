@@ -30,7 +30,7 @@ namespace zsw{
     SphereDeformTool(const double *center, const double ri, const double ro) {
       center_[0] = center[0]; center_[1] = center[1]; center_[2] = center[2];
       r_[0] = ri; r_[1] = ro;
-      n_  = 1000;
+      time_slice_  = 1000;
     }
     void setDeformer(std::shared_ptr<VfDeformer> deformer);
     void translateAndDeform(const double *trans_vec);
@@ -42,7 +42,7 @@ namespace zsw{
     std::shared_ptr<VfDeformer> deformer_;
     double center_[3];
     double r_[2];
-    size_t n_;
+    size_t time_slice_;
 
     // translate vector
     const double* trans_vec_;
