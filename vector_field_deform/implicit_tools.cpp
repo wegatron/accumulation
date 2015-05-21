@@ -9,30 +9,39 @@ using namespace zsw;
 
 void zsw::SphereDeformTool::calcU(const Eigen::Vector3d &u_dest, Eigen::Vector3d &u0, Eigen::Vector3d &u1)
 {
+  const double eps = 1e-6;
   size_t min_ind = 0;
+  double len = u_dest.norm();
+  if(len < eps) {    u0.setZero(); u1.setZero();    return;  }
   if(fabs(u_dest[1]) < fabs(u_dest[min_ind]) ) min_ind = 1;
   if(fabs(u_dest[2]) < fabs(u_dest[min_ind]) ) min_ind = 2;
 
+  Eigen::Vector3d u = u_dest/len;
   u0[min_ind] = 0;
   switch(min_ind) {
   case 0:
-    u0[1] = u_dest[2];
-    u0[2] = -u_dest[1];
+    u0[1] = u[2];
+    u0[2] = -u[1];
     break;
   case 1:
-    u0[0] = u_dest[2];
-    u0[2] = -u_dest[0];
+    u0[0] = u[2];
+    u0[2] = -u[0];
     break;
   default: // 2
-    u0[1] = u_dest[0];
-    u0[0] = -u_dest[1];
+    u0[1] = u[0];
+    u0[0] = -u[1];
     break;
   }
-  u1 = u_dest.cross(u0);
-  const double eps = 1e-6;
-  if((u0.cross(u1)-u_dest).squaredNorm() > eps) {
+  u1 = u.cross(u0);
+  if((u0.cross(u1)-u).squaredNorm() > eps) {
     u1 = -u1;
   }
+  u1 *= sqrt(len);
+  u0 *= sqrt(len);
+  // std::cerr << "u_dest:" << u_dest.transpose() << std::endl;
+  // std::cerr << "u0:" << u0.transpose() << std::endl;
+  // std::cerr << "u1:" << u1.transpose() << std::endl;
+  // std::cerr << "err u:" << (u0.cross(u1)-u_dest).squaredNorm() << std::endl;
   assert((u0.cross(u1)-u_dest).squaredNorm() < eps);
 }
 
