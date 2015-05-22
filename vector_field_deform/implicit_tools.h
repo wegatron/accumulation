@@ -44,7 +44,8 @@ namespace zsw{
     void translateAndDeform(const double *trans_vec);
     void setTimeSlice(size_t time_slice) {
       time_slice_ = time_slice;
-      deformer_->getVectorFieldIntegrator()->setStep(1.0/time_slice_);
+      if(deformer_ != nullptr)
+        deformer_->getVectorFieldIntegrator()->setStep(1.0/time_slice_);
     }
   protected:
     void updateVectorFieldAndDeform();

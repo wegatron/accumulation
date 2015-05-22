@@ -17,6 +17,7 @@ void testPlane()
   double center[3] = {0,0,0};
   SphereDeformTool spdf_tool(center, 0.01, 0.8);
   spdf_tool.setDeformer(vf_deformer);
+  spdf_tool.setTimeSlice(10);
   double trans_vec[3][3] = {{0,0.1,0}, {0,0.1,0}, {0,0.1,0}};
   // doing deform
   {
