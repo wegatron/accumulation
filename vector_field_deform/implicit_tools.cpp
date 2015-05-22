@@ -159,6 +159,7 @@ void zsw::VfDeformer::pushVectorFieldAndDeform(std::shared_ptr<VectorField> vf)
   assert(vf_integrator_ != nullptr);
   vf_integrator_->pushVectorField(vf);
   assert(verts_.cols()!=0);
+  #pragma omp parallel for
   for(size_t i=0; i<verts_.cols(); ++i) {
     Eigen::Vector3d pos = verts_.block<3,1>(0,i);
     verts_.block<3,1>(0,i) += (*vf_integrator_)(pos.data());
