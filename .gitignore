@@ -29,3 +29,8 @@ tmp
 #other
 AC/main.cpp
 AC/input
+
+#doc
+*/doc/*.log
+*/doc/*.aux
+*/doc/*.pdf
