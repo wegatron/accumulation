@@ -17,10 +17,10 @@ add_custom_command(OUTPUT quad_scalar_field.f90
   COMMAND "maxima" ARGS --userdir=${SRC_DIR} -b quad_scalar_field.mac
   DEPENDS quad_scalar_field.mac)
 
-add_library(quad_scalar_field SHARED quad_scalar_field.f90)
+#add_library(quad_scalar_field SHARED quad_scalar_field.f90)
 
 file(GLOB src *.cpp)
 file(GLOB headers *.h)
 
-add_library(vector_fields SHARED ${src} ${headers})
+add_library(vector_fields SHARED ${src} ${headers} quad_scalar_field.f90)
 add_subdirectory(test)

@@ -14,9 +14,9 @@ block(
                 [tmp, ret],
                 tmp : CROSS(a, x-c),
                 ret: DOT(tmp, tmp),
-                ret
+                matrix([ret])
         ),
-        with_stdout(f, val_jac_hes_to_f90(quad_scalar_fiell, [x, a, c]))
+        with_stdout(f, val_jac_hes_to_f90(quad_scalar_field, [x, a, c]))
 )$
 
 close(f)$
