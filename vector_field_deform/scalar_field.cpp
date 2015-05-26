@@ -6,7 +6,11 @@
 #include <string.h>
 #include <assert.h>
 #include <cmath>
-#include <Eigen/Dense>
+
+extern "C" {
+  void quad_scalar_field_(double *val, const double *x, const double *a, const double *c);
+  void quad_scalar_field_jac_(double *jac, const double *x, const double *a, const double *c);
+}
 
 zsw::LinearScalarField::LinearScalarField(const double *u, const double *c)
 {
@@ -36,16 +40,16 @@ zsw::QuadraticScalarField::QuadraticScalarField(const double *a, const double *c
 
 double zsw::QuadraticScalarField::val(const double *x)
 {
-  Eigen::Vector3d ea, ex, ec;
-  ea << a_[0] , a_[1], a_[2];
-  ex << x[0], x[1], x[2];
-  ec << c_[0], c_[1], c_[2];
-  return (ea.cross(ex-ec)).squaredNorm();
+  assert(x != nullptr);
+  double ret = 0.0;
+  quad_scalar_field_(&ret, x, a_, c_);
+  return ret;
 }
 
 void zsw::QuadraticScalarField::jac(const double *x, double *g)
 {
-
+  assert(x!=nullptr && g!=nullptr);
+  quad_scalar_field_jac_(g, x, a_, c_);
 }
 
 
