@@ -6,6 +6,7 @@
 #include <string.h>
 #include <assert.h>
 #include <cmath>
+#include <Eigen/Dense>
 
 zsw::LinearScalarField::LinearScalarField(const double *u, const double *c)
 {
@@ -24,6 +25,29 @@ void zsw::LinearScalarField::jac(const double *x, double *g)
 }
 
 zsw::LinearScalarField::~LinearScalarField(){}
+
+
+zsw::QuadraticScalarField::QuadraticScalarField(const double *a, const double *c)
+{
+  assert(a!=nullptr && c!=nullptr);
+  std::copy(a, a+3, a_);
+  std::copy(c, c+3, c_);
+}
+
+double zsw::QuadraticScalarField::val(const double *x)
+{
+  Eigen::Vector3d ea, ex, ec;
+  ea << a_[0] , a_[1], a_[2];
+  ex << x[0], x[1], x[2];
+  ec << c_[0], c_[1], c_[2];
+  return (ea.cross(ex-ec)).squaredNorm();
+}
+
+void zsw::QuadraticScalarField::jac(const double *x, double *g)
+{
+
+}
+
 
 zsw::BlendFunc::BlendFunc(const double ri, const double ro)
 {

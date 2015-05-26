@@ -25,6 +25,17 @@ namespace zsw {
     double c_[3];
   };
 
+  class QuadraticScalarField final : public Function
+  {
+  public:
+    QuadraticScalarField(const double *a, const double *c);
+    double val(const double *x);
+    void jac(const double *x, double *g);
+  private:
+    double a_[3];
+    double c_[3];
+  };
+
   /**
    * function b(r)
    */
