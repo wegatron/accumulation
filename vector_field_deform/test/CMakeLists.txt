@@ -12,3 +12,6 @@ target_link_libraries(test_vector_field vector_fields)
 
 add_executable(test_implicit_tool test_implicit_tool.cpp)
 target_link_libraries(test_implicit_tool vector_fields)
+
+add_executable(test_quad_scalar_field test_quad_scalar_field.cpp)
+target_link_libraries(test_quad_scalar_field vector_fields)
