@@ -127,6 +127,19 @@ where $\textbf{c}$ is the current center. The region function is defined as
 \begin{equation}
   r(\textbf{x}) = (\textbf{x}-\textbf{c})^2
 \end{equation}
+\subsection{Bending Deform Tool}
+A linear vector field v is used to describe a rotation inside the inner region. Given a rotational axis by a center point $\textbf{c}$ and the normalized axis direction $\textbf{a}$, Then the e(x) and f(x) is:
+\begin{equation}
+  e(x) = \textbf{a}(\textbf{x}-\textbf{c}), f(x)= (\textbf{a} \times (\textbf{x} - \textbf{c}))^2
+\end{equation}
+The region function is defined as
+\begin{equation}
+  r(\textbf{x}) = \textbf{b} \cdot (\textbf{x}-\textbf{c})
+\end{equation}
+Then if rotate $\theta$,
+\begin{equation}
+  \textbf{v}_{final}(x) = \theta \cdot \textbf{v}
+\end{equation}
 %% \begin{equation}\label{eq:area}
 %%   S = \pi r^2
 %% \end{equation}
