@@ -111,6 +111,11 @@ void zsw::BendDeformTool::rotate(const double theta)
   std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
 }
 
+void zsw::BendDeformTool::updateVectorFieldAndDeform()
+{
+  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+}
+
 void zsw::VfDeformer::loadModel(const std::string& file_path)
 {
   ifstream ifs(file_path);

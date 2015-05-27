@@ -63,10 +63,17 @@ void testSphere()
 
 void testBendBeam()
 {
-  // std::shared_ptr<VectorFieldIntegrator> vf_integrator(new AdVectorIntegrator());
-  // std::shared_ptr<VfDeformer> vf_deformer(new VfDeformer());
-  // vf_deformer->setVectorFieldIntegrator(vf_integrator);
-  // vf_deformer->loadModel("/home/wegatron/tmp/beam_input.obj");
+  std::shared_ptr<VectorFieldIntegrator> vf_integrator(new AdVectorIntegrator());
+  std::shared_ptr<VfDeformer> vf_deformer(new VfDeformer());
+  vf_deformer->setVectorFieldIntegrator(vf_integrator);
+  vf_deformer->loadModel("/home/wegatron/tmp/beam_input.obj");
+  double b[3] = {1,0,0};
+  double a[3] = {0, 1, 0};
+  double c[3] = {0,0,0};
+  double r[2] = {0.0, 6.0};
+  zsw::BendDeformTool bdf_tool(b,a,c, r[0], r[1]);
+  bdf_tool.rotate(0.8);
+  vf_deformer->saveModel("/home/wegatron/tmp/beam_output.obj");
 }
 
 int main(int argc, char *argv[])
