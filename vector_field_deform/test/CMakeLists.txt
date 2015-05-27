@@ -15,3 +15,6 @@ target_link_libraries(test_implicit_tool vector_fields)
 
 add_executable(test_quad_scalar_field test_quad_scalar_field.cpp)
 target_link_libraries(test_quad_scalar_field vector_fields)
+
+add_executable(test_isosurface_region_func test_isosurface_region_func.cpp)
+target_link_libraries(test_isosurface_region_func vector_fields)

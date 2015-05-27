@@ -83,6 +83,20 @@ namespace zsw {
   private:
     double center_[3];
   };
+
+  class IsosurfacesRegionFunc final : public RegionFunc
+  {
+  public:
+    // ri = 0
+    IsosurfacesRegionFunc(const double *b, const double *center, const double ri, const double ro);
+    double val(const double*x);
+    void jac(const double *x, double *g);
+    REGION_TYPE judgeRegion(const double *x);
+    /* const double * getCenter() const { return center_; } */
+  private:
+    double center_[3];
+    double b_[3];
+  };
 }
 
 #endif /* SCALAR_FIELD_H */

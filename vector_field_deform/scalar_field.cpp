@@ -109,11 +109,38 @@ zsw::RegionFunc::REGION_TYPE zsw::SphereRegionFunc::judgeRegion(const double *x)
 {
   double v = (x[0]-center_[0])*(x[0]-center_[0])+(x[1]-center_[1])*(x[1]-center_[1])+(x[2]-center_[2])*(x[2]-center_[2]);
   // std::cerr <<"[DEBUG]" <<  v << " " << ro_*ro_ << " " << ri_*ri_ << std::endl;
-  if(v > ro_*ro_)   {
+  if(v >= ro_*ro_)   {
     return zsw::RegionFunc::OUTER_REGION;
   }
   if(v < ri_*ri_) {
     return zsw::RegionFunc::INNER_REGION;
+  }
+  return zsw::RegionFunc::BLENDER_REGION;
+}
+
+zsw::IsosurfacesRegionFunc::IsosurfacesRegionFunc(const double *b, const double *center, const double ri, const double ro)
+{
+  std::copy(b, b+3, b_);
+  std::copy(center, center+3, center_);
+  ro_ = ro;
+  ri_ = ri;
+}
+double zsw::IsosurfacesRegionFunc::val(const double*x)
+{
+  return (x[0]-center_[0])*b_[0] + (x[1]-center_[1])*b_[1] + (x[2]-center_[2])*b_[2];
+}
+void zsw::IsosurfacesRegionFunc::jac(const double *x, double *g)
+{
+  std::copy(b_, b_+3, g);
+}
+
+zsw::RegionFunc::REGION_TYPE zsw::IsosurfacesRegionFunc::judgeRegion(const double *x)
+{
+  double v = val(x);
+  if(v<ri_) {
+    return zsw::RegionFunc::INNER_REGION;
+  } else if(v>=ro_) {
+    return zsw::RegionFunc::OUTER_REGION;
   }
   return zsw::RegionFunc::BLENDER_REGION;
 }
