@@ -25,6 +25,9 @@ namespace zsw {
     double c_[3];
   };
 
+  /**
+   * f(x) = [a.cross(x-c)]^2
+   */
   class QuadraticScalarField final : public Function
   {
   public:
@@ -34,6 +37,20 @@ namespace zsw {
   private:
     double a_[3];
     double c_[3];
+  };
+
+  /**
+   * e(x) = [a.dot(x-c)]^2
+   */
+  class QuadraticScalarField2 final : public Function
+  {
+  public:
+    QuadraticScalarField2(const double *a, const double *center);
+    double val(const double *x) = 0;
+    void jac(const double *x, double *g) = 0;
+  private:
+    double a_[3];
+    double center_[3];
   };
 
   /**

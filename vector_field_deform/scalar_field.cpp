@@ -10,6 +10,8 @@
 extern "C" {
   void quad_scalar_field_(double *val, const double *x, const double *a, const double *c);
   void quad_scalar_field_jac_(double *jac, const double *x, const double *a, const double *c);
+  void quad_scalar_field2_(double *val, const double *x, const double *a, const double *c);
+  void quad_scalar_field2_jac_(double *jac, const double *x, const double *a, const double *c);
 }
 
 zsw::LinearScalarField::LinearScalarField(const double *u, const double *c)
@@ -52,6 +54,23 @@ void zsw::QuadraticScalarField::jac(const double *x, double *g)
   quad_scalar_field_jac_(g, x, a_, c_);
 }
 
+zsw::QuadraticScalarField2::QuadraticScalarField2(const double *a, const double *center)
+{
+  std::copy(a, a+3, a_);
+  std::copy(center, center+3, center_);
+}
+
+double zsw::QuadraticScalarField2::val(const double *x)
+{
+  double ret = 0.0;
+  quad_scalar_field2_(&ret, x, a_, center_);
+  return ret;
+}
+
+void zsw::QuadraticScalarField2::jac(const double *x, double *g)
+{
+  quad_scalar_field2_jac_(g, x, a_, center_);
+}
 
 zsw::BlendFunc::BlendFunc(const double ri, const double ro)
 {
