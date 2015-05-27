@@ -123,6 +123,11 @@ void zsw::BendDeformTool::rotateAndDeform(const double theta)
   deformer_->getVectorFieldIntegrator()->setStep(0.5*theta/time_slice_); //  angular velocity is 2
   for(size_t i=0; i<time_slice_; ++i) {
     updateVectorFieldAndDeform();
+    #if 1
+    static size_t counter = -1;
+    writeVtk("/home/wegatron/tmp/se_"+std::to_string(++counter)+".vtk", deformer_->getVerts(), deformer_->getTris());
+    std::cout << "step " << counter << std::endl;
+   #endif
   }
 }
 
