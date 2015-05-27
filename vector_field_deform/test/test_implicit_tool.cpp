@@ -60,7 +60,6 @@ void testSphere()
   // vf_deformer->saveModel("/home/wegatron/tmp/sphere_final.obj");
 }
 
-
 void testBendBeam()
 {
   std::shared_ptr<VectorFieldIntegrator> vf_integrator(new AdVectorIntegrator());
@@ -74,13 +73,29 @@ void testBendBeam()
   zsw::BendDeformTool bdf_tool(b,a,c, r[0], r[1]);
   bdf_tool.setDeformer(vf_deformer);
   bdf_tool.rotateAndDeform(0.8);
-  vf_deformer->saveModel("/home/wegatron/tmp/beam_output.obj");
+  vf_deformer->saveModel("/home/wegatron/tmp/beam_bend_output.obj");
+}
+
+void testTwistBeam()
+{
+  std::shared_ptr<VectorFieldIntegrator> vf_integrator(new AdVectorIntegrator());
+  std::shared_ptr<VfDeformer> vf_deformer(new VfDeformer());
+  vf_deformer->setVectorFieldIntegrator(vf_integrator);
+  vf_deformer->loadModel("/home/wegatron/tmp/beam_input.obj");
+  double a[3] = {1,0,0};
+  double c[3] = {-5.5, 0,0};
+  double r[2] = {100.0, 200};// all in inner region
+  zsw::TwistDeformTool tdf_tool(a, c, r[0], r[1]);
+  tdf_tool.setDeformer(vf_deformer);
+  tdf_tool.twistAndDeform(3.14);
+  vf_deformer->saveModel("/home/wegatron/tmp/beam_twist_output.obj");
 }
 
 int main(int argc, char *argv[])
 {
   // testPlane();
   // testSphere();
-  testBendBeam();
+  // testBendBeam();
+  testTwistBeam();
   return 0;
 }

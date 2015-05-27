@@ -136,6 +136,21 @@ void zsw::BendDeformTool::updateVectorFieldAndDeform()
   deformer_->pushVectorFieldAndDeform(vf_);
 }
 
+zsw::TwistDeformTool::TwistDeformTool(const double *a, const double *center, const double ri, const double ro)
+{
+  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+}
+
+void zsw::TwistDeformTool::twistAndDeform(const double theta)
+{
+  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+}
+
+void zsw::TwistDeformTool::updateVectorFieldAndDeform()
+{
+  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+}
+
 void zsw::VfDeformer::loadModel(const std::string& file_path)
 {
   ifstream ifs(file_path);
