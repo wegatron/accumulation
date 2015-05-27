@@ -136,19 +136,34 @@ void zsw::BendDeformTool::updateVectorFieldAndDeform()
   deformer_->pushVectorFieldAndDeform(vf_);
 }
 
-zsw::TwistDeformTool::TwistDeformTool(const double *a, const double *center, const double ri, const double ro)
+zsw::TwistDeformTool::TwistDeformTool(const double *a, const double *center, const double ri, const double ro) : vf_(new VectorField())
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  // time slice
+  time_slice_ = 100;
+  // create vector field
+  std::shared_ptr<Function> ex_func(new QuadraticScalarField2(a, center));
+  std::shared_ptr<Function> fx_func(new QuadraticScalarField(a, center));
+  std::shared_ptr<RegionFunc> rx_func(new IsosurfacesRegionFunc(a,center, ri, ro));
+  std::shared_ptr<BlendFunc> br_func(new BlendFunc(ri, ro));
+  vf_->setExFunc(ex_func);
+  vf_->setFxFunc(fx_func);
+  vf_->setBrFunc(br_func);
+  vf_->setRxFunc(rx_func);
+  angle_v_ = 4*ri;   // angular velocity is 4ri
 }
 
 void zsw::TwistDeformTool::twistAndDeform(const double theta)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  assert(deformer_!=nullptr);
+  deformer_->getVectorFieldIntegrator()->setStep(theta/angle_v_/time_slice_);
+  for(size_t i=0; i<time_slice_; ++i) {
+    updateVectorFieldAndDeform();
+  }
 }
 
 void zsw::TwistDeformTool::updateVectorFieldAndDeform()
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  deformer_->pushVectorFieldAndDeform(vf_);
 }
 
 void zsw::VfDeformer::loadModel(const std::string& file_path)

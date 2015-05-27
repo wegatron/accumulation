@@ -75,9 +75,9 @@ namespace zsw{
     void twistAndDeform(const double theta);
   protected:
     virtual void updateVectorFieldAndDeform();
-  /* private: */
-  /*   double a_[3]; */
-  /*   double center_[3]; */
+  private:
+    std::shared_ptr<VectorField> vf_;
+    double angle_v_;
   };
 }
 
