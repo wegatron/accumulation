@@ -103,17 +103,23 @@ void zsw::SphereDeformTool::translateAndDeform(const double *trans_vec)
 
 zsw::BendDeformTool::BendDeformTool(const double *b, const double *a, const double *center, const double ri, const double ro)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  // create vector field
+  std::cerr << "Function " << __FUNCTION__ << " in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
 }
 
-void zsw::BendDeformTool::rotate(const double theta)
+void zsw::BendDeformTool::rotateAndDeform(const double theta)
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  assert(vf_ != nullptr && deformer_ != nullptr);
+  assert(theta > -3.1415926 && theta < 3.1415926);
+  deformer_->getVectorFieldIntegrator()->setStep(0.5*theta/time_slice_); //  angular velocity is 2
+  for(size_t i=0; i<time_slice_; ++i) {
+    updateVectorFieldAndDeform();
+  }
 }
 
 void zsw::BendDeformTool::updateVectorFieldAndDeform()
 {
-  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  deformer_->pushVectorFieldAndDeform(vf_);
 }
 
 void zsw::VfDeformer::loadModel(const std::string& file_path)

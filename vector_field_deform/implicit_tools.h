@@ -60,7 +60,7 @@ namespace zsw{
   {
   public:
     BendDeformTool(const double *b, const double *a, const double *center, const double ri, const double ro);
-    void rotate(const double theta);
+    void rotateAndDeform(const double theta);
   protected:
     void updateVectorFieldAndDeform();
   private:
