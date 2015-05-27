@@ -8,6 +8,19 @@
 using namespace std;
 using namespace zsw;
 
+void zsw::ImplicitTool::setDeformer(std::shared_ptr<VfDeformer> deformer)
+{
+  assert(deformer != nullptr);
+  deformer_ = deformer;
+  deformer_->getVectorFieldIntegrator()->setStep(1.0/time_slice_);
+}
+
+void zsw::ImplicitTool::setTimeSlice(size_t time_slice) {
+  time_slice_ = time_slice;
+  if(deformer_ != nullptr)
+    deformer_->getVectorFieldIntegrator()->setStep(1.0/time_slice_);
+}
+
 void zsw::SphereDeformTool::calcU(const Eigen::Vector3d &u_dest, Eigen::Vector3d &u0, Eigen::Vector3d &u1)
 {
   const double eps = 1e-6;
@@ -44,13 +57,6 @@ void zsw::SphereDeformTool::calcU(const Eigen::Vector3d &u_dest, Eigen::Vector3d
   // std::cerr << "u1:" << u1.transpose() << std::endl;
   // std::cerr << "err u:" << (u0.cross(u1)-u_dest).squaredNorm() << std::endl;
   assert((u0.cross(u1)-u_dest).squaredNorm() < eps);
-}
-
-void zsw::SphereDeform::setDeformer(std::shared_ptr<VfDeformer> deformer)
-{
-  assert(deformer != nullptr);
-  deformer_ = deformer;
-  deformer_->getVectorFieldIntegrator()->setStep(1.0/time_slice_);
 }
 
 void zsw::SphereDeformTool::updateVectorFieldAndDeform()
@@ -93,6 +99,16 @@ void zsw::SphereDeformTool::translateAndDeform(const double *trans_vec)
   center_[0] += trans_vec[0];
   center_[1] += trans_vec[1];
   center_[2] += trans_vec[2];
+}
+
+zsw::BendDeformTool::BendDeformTool(const double *b, const double *a, const double *center, const double ri, const double ro)
+{
+  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+}
+
+void zsw::BendDeformTool::rotate(const double theta)
+{
+  std::cerr << "Function " << __FUNCTION__ << "in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
 }
 
 void zsw::VfDeformer::loadModel(const std::string& file_path)

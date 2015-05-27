@@ -33,7 +33,9 @@ namespace zsw{
     void setTimeSlice(size_t time_slice);
   protected:
     virtual void updateVectorFieldAndDeform() = 0;
+    std::shared_ptr<VfDeformer> deformer_;
     size_t time_slice_;
+    double r_[2];
   };
 
   class SphereDeformTool final : public ImplicitTool
@@ -44,29 +46,26 @@ namespace zsw{
       r_[0] = ri; r_[1] = ro;
       time_slice_  = 100;
     }
-    void setDeformer(std::shared_ptr<VfDeformer> deformer);
     void translateAndDeform(const double *trans_vec);
-    void setTimeSlice(size_t time_slice) {
-      time_slice_ = time_slice;
-      if(deformer_ != nullptr)
-        deformer_->getVectorFieldIntegrator()->setStep(1.0/time_slice_);
-    }
   protected:
     void updateVectorFieldAndDeform();
   private:
     void calcU(const Eigen::Vector3d &u_dest, Eigen::Vector3d &u0, Eigen::Vector3d &u1);
-    std::shared_ptr<VfDeformer> deformer_;
     double center_[3];
-    double r_[2];
-    size_t time_slice_;
-
     // translate vector
     const double* trans_vec_;
   };
 
   class BendDeformTool final : public ImplicitTool
   {
+  public:
+    BendDeformTool(const double *b, const double *a, const double *center, const double ri, const double ro);
+    void rotate(const double theta);
+  protected:
     void updateVectorFieldAndDeform();
+  private:
+    double theta_;
+    std::shared_ptr<zsw::VectorField> vf_;
   };
 }
 
