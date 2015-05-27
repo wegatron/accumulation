@@ -46,7 +46,7 @@ void zsw::SphereDeformTool::calcU(const Eigen::Vector3d &u_dest, Eigen::Vector3d
   assert((u0.cross(u1)-u_dest).squaredNorm() < eps);
 }
 
-void zsw::SphereDeformTool::setDeformer(std::shared_ptr<VfDeformer> deformer)
+void zsw::SphereDeform::setDeformer(std::shared_ptr<VfDeformer> deformer)
 {
   assert(deformer != nullptr);
   deformer_ = deformer;

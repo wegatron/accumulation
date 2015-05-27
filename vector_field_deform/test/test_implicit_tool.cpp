@@ -60,9 +60,19 @@ void testSphere()
   // vf_deformer->saveModel("/home/wegatron/tmp/sphere_final.obj");
 }
 
+
+void testBendBeam()
+{
+  // std::shared_ptr<VectorFieldIntegrator> vf_integrator(new AdVectorIntegrator());
+  // std::shared_ptr<VfDeformer> vf_deformer(new VfDeformer());
+  // vf_deformer->setVectorFieldIntegrator(vf_integrator);
+  // vf_deformer->loadModel("/home/wegatron/tmp/beam_input.obj");
+}
+
 int main(int argc, char *argv[])
 {
   // testPlane();
-  testSphere();
+  // testSphere();
+  testBendBeam();
   return 0;
 }

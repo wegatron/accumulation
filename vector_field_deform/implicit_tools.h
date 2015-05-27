@@ -28,8 +28,12 @@ namespace zsw{
 
   class ImplicitTool
   {
+  public:
+    void setDeformer(std::shared_ptr<VfDeformer> deformer);
+    void setTimeSlice(size_t time_slice);
   protected:
     virtual void updateVectorFieldAndDeform() = 0;
+    size_t time_slice_;
   };
 
   class SphereDeformTool final : public ImplicitTool
@@ -60,6 +64,10 @@ namespace zsw{
     const double* trans_vec_;
   };
 
+  class BendDeformTool final : public ImplicitTool
+  {
+    void updateVectorFieldAndDeform();
+  };
 }
 
 #endif /* IMPLICIT_TOOLS_H */
