@@ -66,6 +66,8 @@ namespace zsw{
   private:
     double theta_;
     std::shared_ptr<zsw::VectorField> vf_;
+    double a_[3], b_[3], center_[3];
+    double ri_, ro_;
   };
 
   class TwistDeformTool final : public ImplicitTool

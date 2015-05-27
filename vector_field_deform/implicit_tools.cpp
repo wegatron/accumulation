@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <Eigen/Dense>
+#include <Eigen/Geometry>
 #include "VTKWriter.h"
 
 using namespace std;
@@ -105,6 +106,12 @@ zsw::BendDeformTool::BendDeformTool(const double *b, const double *a, const doub
 {
   // time_slice
   time_slice_ = 100;
+std::copy(a, a+3, a_);
+std::copy(b, b+3, b_);
+std::copy(center, center+3, center_);
+ri_ = ri;
+ro_ = ro;
+
   // create vector field
   std::shared_ptr<Function> ex_func(new LinearScalarField(a, center));
   std::shared_ptr<Function> fx_func(new QuadraticScalarField(a, center));
@@ -120,14 +127,24 @@ void zsw::BendDeformTool::rotateAndDeform(const double theta)
 {
   assert(vf_ != nullptr && deformer_ != nullptr);
   assert(theta > -3.1415926 && theta < 3.1415926);
-  deformer_->getVectorFieldIntegrator()->setStep(0.5*theta/time_slice_); //  angular velocity is 2
+  double step_time = theta/2.0/time_slice_;
+  deformer_->getVectorFieldIntegrator()->setStep(step_time); //  angular velocity is 2
   for(size_t i=0; i<time_slice_; ++i) {
     updateVectorFieldAndDeform();
-    #if 1
+    // update region func rotate theta/time_slice_/2 of a
+    Eigen::Matrix3d rotate_mat;
+    Eigen::Vector3d axis, newb; axis << a_[0], a_[1], a_[2];
+    rotate_mat = Eigen::AngleAxisd(theta/time_slice_/2.0, axis);
+    newb << b_[0], b_[1], b_[2];
+    newb = rotate_mat * newb;
+    std::copy(newb.data(), newb.data()+3, b_);
+    std::shared_ptr<RegionFunc> rx_func(new IsosurfacesRegionFunc(b_, center_, ri_, ro_));
+    vf_->setRxFunc(rx_func);
+#if 1
     static size_t counter = -1;
     writeVtk("/home/wegatron/tmp/se_"+std::to_string(++counter)+".vtk", deformer_->getVerts(), deformer_->getTris());
     std::cout << "step " << counter << std::endl;
-   #endif
+#endif
   }
 }
 

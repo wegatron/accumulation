@@ -72,7 +72,7 @@ void testBendBeam()
   double r[2] = {-2.0, 2.0};
   zsw::BendDeformTool bdf_tool(b,a,c, r[0], r[1]);
   bdf_tool.setDeformer(vf_deformer);
-  bdf_tool.rotateAndDeform(0.8);
+  bdf_tool.rotateAndDeform(3.1415926/2.0);
   vf_deformer->saveModel("/home/wegatron/tmp/beam_bend_output.obj");
 }
 
@@ -84,10 +84,10 @@ void testTwistBeam()
   vf_deformer->loadModel("/home/wegatron/tmp/beam_input.obj");
   double a[3] = {1,0,0};
   double c[3] = {-5.5, 0,0};
-  double r[2] = {100.0, 200};// all in inner region
+  double r[2] = {6.0, 200};// all in inner region
   zsw::TwistDeformTool tdf_tool(a, c, r[0], r[1]);
   tdf_tool.setDeformer(vf_deformer);
-  tdf_tool.twistAndDeform(5*3.14);
+  tdf_tool.twistAndDeform(3.1415926);
   vf_deformer->saveModel("/home/wegatron/tmp/beam_twist_output.obj");
 }
 
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 {
   // testPlane();
   // testSphere();
-  // testBendBeam();
-  testTwistBeam();
+  testBendBeam();
+  // testTwistBeam();
   return 0;
 }
