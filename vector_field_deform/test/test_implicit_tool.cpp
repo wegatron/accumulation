@@ -72,6 +72,7 @@ void testBendBeam()
   double c[3] = {0,0,0};
   double r[2] = {0.0, 6.0};
   zsw::BendDeformTool bdf_tool(b,a,c, r[0], r[1]);
+  bdf_tool.setDeformer(vf_deformer);
   bdf_tool.rotateAndDeform(0.8);
   vf_deformer->saveModel("/home/wegatron/tmp/beam_output.obj");
 }

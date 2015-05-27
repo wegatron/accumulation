@@ -103,6 +103,8 @@ void zsw::SphereDeformTool::translateAndDeform(const double *trans_vec)
 
 zsw::BendDeformTool::BendDeformTool(const double *b, const double *a, const double *center, const double ri, const double ro) :  vf_(new VectorField())
 {
+  // time_slice
+  time_slice_ = 100;
   // create vector field
   std::shared_ptr<Function> ex_func(new LinearScalarField(a, center));
   std::shared_ptr<Function> fx_func(new QuadraticScalarField(a, center));
