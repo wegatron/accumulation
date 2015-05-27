@@ -101,10 +101,17 @@ void zsw::SphereDeformTool::translateAndDeform(const double *trans_vec)
   center_[2] += trans_vec[2];
 }
 
-zsw::BendDeformTool::BendDeformTool(const double *b, const double *a, const double *center, const double ri, const double ro)
+zsw::BendDeformTool::BendDeformTool(const double *b, const double *a, const double *center, const double ri, const double ro) :  vf_(new VectorField())
 {
   // create vector field
-  std::cerr << "Function " << __FUNCTION__ << " in " << __FILE__ << __LINE__  << " haven't implement!!!" << std::endl;
+  std::shared_ptr<Function> ex_func(new LinearScalarField(a, center));
+  std::shared_ptr<Function> fx_func(new QuadraticScalarField(a, center));
+  std::shared_ptr<RegionFunc> rx_func(new IsosurfacesRegionFunc(b, center, ri, ro));
+  std::shared_ptr<BlendFunc> br_func(new BlendFunc(ri, ro));
+  vf_->setExFunc(ex_func);
+  vf_->setFxFunc(fx_func);
+  vf_->setBrFunc(br_func);
+  vf_->setRxFunc(rx_func);
 }
 
 void zsw::BendDeformTool::rotateAndDeform(const double theta)
