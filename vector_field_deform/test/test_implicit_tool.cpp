@@ -87,7 +87,7 @@ void testTwistBeam()
   double r[2] = {100.0, 200};// all in inner region
   zsw::TwistDeformTool tdf_tool(a, c, r[0], r[1]);
   tdf_tool.setDeformer(vf_deformer);
-  tdf_tool.twistAndDeform(3.14);
+  tdf_tool.twistAndDeform(5*3.14);
   vf_deformer->saveModel("/home/wegatron/tmp/beam_twist_output.obj");
 }
 
