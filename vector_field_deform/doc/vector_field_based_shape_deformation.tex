@@ -10,6 +10,8 @@
 \usepackage{amsmath, amsthm, amsfonts}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
 
 % Theorems
 %-----------------------------------------------------------------
@@ -59,7 +61,7 @@
 %% \abstract{Compiling Embedded\_thin\_shell progress}
 
 \section{Abstract}
-This paper construct a $C^1$ continuous, divergence-free vector field to deform a 3d model.
+The paper construct a $C^1$ continuous, divergence-free vector field to deform a 3d model.
 \section{The Vector Field}
 In 3D, a divergence-free vector field $v$ can be constructed from the gradients of two scalar fields $p(x,y,z), q(x,y,z)$ as
 \begin{equation}
@@ -105,7 +107,7 @@ Then the vector field should be:
 \caption{Integrator algorithm}\label{euclid}
 \begin{algorithmic}
  \Procedure{Init Procedure}{}
-\State $\textit{h} \gets $\textit{1.0/time\_slice}
+\State $\textit{h} \gets $\textit{T/time\_slice}
 \State $i \gets \textit{0}$
 \State $cur\_t \gets \textit{init\_time}$
 \EndProcedure
@@ -132,13 +134,66 @@ A linear vector field v is used to describe a rotation inside the inner region. 
 \begin{equation}
   e(x) = \textbf{a}(\textbf{x}-\textbf{c}), f(x)= (\textbf{a} \times (\textbf{x} - \textbf{c}))^2
 \end{equation}
+from quation up, we can derive that the angular velocity in the inner region is 2, take $Line(\textbf{a} , \textbf{c})$ as axis.\footnote{\noindent see Appendix.}
 The region function is defined as
 \begin{equation}
   r(\textbf{x}) = \textbf{b} \cdot (\textbf{x}-\textbf{c})
 \end{equation}
-Then if rotate $\theta$,
+Innfer from the paper, $\textbf{b}$ rotate the half of the inner regions rotation. So in each time\_step update $\textbf{b}$ and recaculate r(x) and update vector field.
 \begin{equation}
-  \textbf{v}_{final}(x) = \theta \cdot \textbf{v}
+  \textbf{b} = rotate\_mat * \textbf{b}
+\end{equation}
+\subsection{Twist Deform Tool}
+By using a linearly increasing rotation defined by:
+\begin{equation}
+e(x) = (a \cdot (x-c) )^2,  f(x)=(a \times (x-c) )^2
+\end{equation}
+ we construct a twist vector field in the inner region.\footnote{\noindent we can construct a more understanble scalar field e(x), see Appendix}
+ \begin{figure}[H]
+\includegraphics[width=8cm]{twist}
+\centering
+\end{figure}
+The region function is defind as:
+\begin{equation}
+  r(x) = a \cdot (x-c)
+\end{equation}
+
+\section{Result}
+Sphere Deform Tool:
+\begin{figure}[H]
+\includegraphics[width=8cm]{sphere_deform_result}
+\centering
+\end{figure}
+
+Bend Deform Tool:
+\begin{figure}[H]
+\includegraphics[width=8cm]{bend_result}
+\centering
+\end{figure}
+
+Twist Deform Tool:
+\begin{figure}[H]
+\includegraphics[width=8cm]{twist_result}
+\centering
+\end{figure}
+
+\section{Appendix}
+Caculate the Bend Deform Tool's angular velocity:
+\begin{figure}[H]
+\includegraphics[width=8cm]{angular_velocity}
+\centering
+\end{figure}
+Construct a scalar field let
+\begin{equation}
+  \nabla e = (\textbf{a} \cdot (x-c)) \textbf{a}
+\end{equation}
+then e(x) define as:
+\begin{equation}
+  \begin{aligned}
+  e(x) &= \frac{a_0}{2}(x_0-c_0)^2 + \frac{a_1}{2}(x_1-c_1)^2 + \frac{a_2}{2}(x_2-c_2)^2 \\
+  &+ a_0a_1(x_1-c_1)x_0 + a_0a_2(x_2-c_2)x_0+ a_1a_2(x_2-c_2)x_1\\
+  &-a_1a_0c_0x_1-a_2a_0c_0x_2 - a_2a_1c_1x_2
+  \end{aligned}
 \end{equation}
 %% \begin{equation}\label{eq:area}
 %%   S = \pi r^2
