@@ -46,8 +46,8 @@ namespace zsw {
   {
   public:
     QuadraticScalarField2(const double *a, const double *center);
-    double val(const double *x) = 0;
-    void jac(const double *x, double *g) = 0;
+    double val(const double *x);
+    void jac(const double *x, double *g);
   private:
     double a_[3];
     double center_[3];

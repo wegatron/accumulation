@@ -18,3 +18,6 @@ target_link_libraries(test_quad_scalar_field vector_fields)
 
 add_executable(test_isosurface_region_func test_isosurface_region_func.cpp)
 target_link_libraries(test_isosurface_region_func vector_fields)
+
+add_executable(test_quad_scalar_field2 test_quad_scalar_field2.cpp)
+target_link_libraries(test_quad_scalar_field2 vector_fields)
