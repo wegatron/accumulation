@@ -19,6 +19,7 @@ zsw::BilateralNormalFilter::BilateralNormalFilter()
 void zsw::BilateralNormalFilter::filter(jtf::mesh::tri_mesh &trimesh)
 {
   for(size_t i=0; i<st_; ++i) {
+    std::cerr << "step " << i << std::endl;
     filterNormal(trimesh);
   }
   writeTriMesh("/home/wegatron/tmp/tooth_debug0.obj", trimesh.trimesh_.mesh_, trimesh.trimesh_.node_, trimesh.face_normal_);
@@ -47,7 +48,9 @@ void zsw::BilateralNormalFilter::filterNormal(jtf::mesh::tri_mesh &trimesh)
       wa += w_tmp;
       new_ni += w_tmp * nj;
     }
+    std::cerr << normal(0, i) << " " << normal(1, i) << " " << normal(2,i) << std::endl;
     normal(colon(), i) = new_ni/wa;
+    std::cerr << normal(0, i) << " " << normal(1, i) << " " << normal(2,i) << std::endl;
   }
 }
 
@@ -57,22 +60,31 @@ bool zsw::BilateralNormalFilter::queryFidOneRing(const size_t fid, const jtf::me
 
   {
     std::pair<size_t, size_t> res = trimesh.ea_->query(vid[0], vid[1]);
-    if(res.first == -1 || res.second == -1) return false;
-
+    if(res.first == -1 || res.second == -1) {
+      std::cout << vid[0] << " " << vid[1] << std::endl;
+      std::cout << res.first << " " << res.second << std::endl;
+      return false;
+    }
     if(res.first != fid) { fid_one_ring.push_back(res.first); }
     else { fid_one_ring.push_back(res.second); }
   }
   {
     std::pair<size_t, size_t> res = trimesh.ea_->query(vid[0], vid[2]);
-    if(res.first == -1 || res.second == -1) return false;
-
+    if(res.first == -1 || res.second == -1) {
+      std::cout << vid[0] << " " << vid[2] << std::endl;
+      std::cout << res.first << " " << res.second << std::endl;
+      return false;
+    }
     if(res.first != fid) { fid_one_ring.push_back(res.first); }
     else { fid_one_ring.push_back(res.second); }
   }
   {
     std::pair<size_t, size_t> res = trimesh.ea_->query(vid[1], vid[2]);
-    if(res.first == -1 || res.second == -1) return false;
-
+    if(res.first == -1 || res.second == -1) {
+      std::cout << vid[1] << " " << vid[2] << std::endl;
+      std::cout << res.first << " " << res.second << std::endl;
+      return false;
+    }
     if(res.first != fid) { fid_one_ring.push_back(res.first); }
     else { fid_one_ring.push_back(res.second); }
   }
