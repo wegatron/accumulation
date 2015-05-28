@@ -6,7 +6,10 @@ include($ENV{HOME}/usr/share/cmake/Modules/geo_sim_sdk.cmake)
 
 #include_directories(CMAKE_CURRENT_SOURCE_DIR/include)
 
-set(CMAKE_CXX_FLAGS "CMAKE_CXX_FLAGS -std=c++11 -fopenmp")
+include_geo_sim_sdk()
+link_geo_sim_sdk()
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp")
 
 ###
 ##FIND_PACKAGE
@@ -17,7 +20,7 @@ set(CMAKE_CXX_FLAGS "CMAKE_CXX_FLAGS -std=c++11 -fopenmp")
 file(GLOB headers *.h)
 file(GLOB src *.cpp)
 
-add_library(bilateral_filter SHARED ${src} ${headers})
+# add_library(bilateral_filter SHARED ${src} ${headers})
 add_subdirectory(test)
 
 # aux_source_directory_with_headers(. sources headers)
