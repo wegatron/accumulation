@@ -20,7 +20,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp")
 file(GLOB headers *.h)
 file(GLOB src *.cpp)
 
-# add_library(bilateral_filter SHARED ${src} ${headers})
+add_library(bilateral_filter SHARED ${src} ${headers})
 add_subdirectory(test)
 
 # aux_source_directory_with_headers(. sources headers)

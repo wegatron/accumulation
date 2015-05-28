@@ -1,4 +1,4 @@
-#include "bilater_normal_filter.h"
+#include "bilateral_normal_filter.h"
 
 zsw::BilateralNormalFilter::BilateralNormalFilter()
 {

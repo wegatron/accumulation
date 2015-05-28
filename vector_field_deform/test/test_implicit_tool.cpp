@@ -94,8 +94,8 @@ void testTwistBeam()
 int main(int argc, char *argv[])
 {
   // testPlane();
-  testSphere();
-  // testBendBeam();
+  // testSphere();
+  testBendBeam();
   // testTwistBeam();
   return 0;
 }
