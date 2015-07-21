@@ -10,7 +10,7 @@
 #include <unistd.h>
 #endif
 
-#include "zsw_log.h"
+#include <zswlib/zsw_log.h>
 
 #define OK 0
 
@@ -26,15 +26,15 @@
 
 // err_hnd throw exception, or return __LINE__;
 
-#define CHECK_RETCODE(ret_code, err_hnd) do{                            \
-    if (ret_code != OK) {                                               \
-      std::stringstream ss;                                             \
-      ss << "Error occured in " << __FILE__ << __LINE__       \
-         << " as ret_code is abnormal!" << std::endl;                   \
-      ZSWLOG("zsw_err", ss.str());                                  \
-      PRINT_BACKTRACE();                                                \
-      err_hnd;                                                          \
-    }                                                                   \
+#define CHECK_RETCODE(ret_code, err_hnd) do{            \
+    if (ret_code != OK) {                               \
+      std::stringstream ss;                             \
+      ss << "Error occured in " << __FILE__ << __LINE__ \
+         << " as ret_code is abnormal!" << std::endl;   \
+      ZSWLOG("zsw_err", ss.str());                      \
+      PRINT_BACKTRACE();                                \
+      err_hnd;                                          \
+    }                                                   \
   }while(0)
 
 #define CALL_FUNC(pn, err_hnd) do{                                      \
@@ -43,24 +43,24 @@
   }while(0)
 
 
-#define CALL_FUNC2(ptr, pn, err_hnd) do{                        \
-    ptr = pn;                                                   \
-    ZSWLOG("zsw_info", std::string("Run: ") + #pn + std::string("\n"));   \
-    if (ptr == nullptr) {                                       \
-      std::stringstream ss;                                          \
-      ss <<  __FILE__ << __LINE__                               \
-         << #pn << " return null." << std::endl;                     \
-        ZSWLOG("zsw_err", ss.str());                            \
-        PRINT_BACKTRACE();                                      \
-        err_hnd;                                                \
-    }                                                           \
+#define CALL_FUNC2(ptr, pn, err_hnd) do{                                \
+    ptr = pn;                                                           \
+    ZSWLOG("zsw_info", std::string("Run: ") + #pn + std::string("\n")); \
+    if (ptr == nullptr) {                                               \
+      std::stringstream ss;                                             \
+      ss <<  __FILE__ << __LINE__                                       \
+         << #pn << " return null." << std::endl;                        \
+        ZSWLOG("zsw_err", ss.str());                                    \
+        PRINT_BACKTRACE();                                              \
+        err_hnd;                                                        \
+    }                                                                   \
   }while(0)
 
 
 #define OPEN_STREAM(path, fs, mode, err_hnd) do{                        \
     fs.open(path, mode);                                                \
     if(!fs || !fs.good()) {                                             \
-      std::stringstream ss;                                                  \
+      std::stringstream ss;                                             \
       ss<< __FILE__ << __LINE__ << " could not open file " << path <<  "for " << #mode << std::endl; \
         ZSWLOG("zsw_err", ss.str());                                    \
         PRINT_BACKTRACE();                                              \
@@ -68,9 +68,10 @@
     }                                                                   \
   }while(0)
 
+#if ASSURE_ACTIVE
 #define ASSURE(cond, err_hnd) do{                                       \
     if(!(cond)) {                                                       \
-      std::stringstream ss;                                                  \
+      std::stringstream ss;                                             \
       ss << "condition " << #cond << " not satisfied!" << std::endl;    \
         ZSW_LOG("zsw_err", ss.str());                                   \
         PRINT_BACKTRACE();                                              \
@@ -80,8 +81,13 @@
 
 #define ASSURE_MSG(cond, msg, err_hnd) do{      \
     if(!(cond)) {                               \
-      ZSWLOG("zsw_err", msg);                      \
+      ZSWLOG("zsw_err", msg);                   \
       err_hnd;                                  \
     }                                           \
   }while(0)
+#else
+#define ASSURE(cond, err_hnd) ((void)(cond))
+#define ASSURE_MSG(cond, msg, err_hnd) ((void)(cond))
+#endif
+
 #endif /* ERROR_CTRL_H */
