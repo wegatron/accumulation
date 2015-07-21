@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: todo
+# key: todo
+# --
+std::cerr << __FILE__ << " " << __LINE__ << __FUNCTION__ << " haven't implemented!" << std::endl;

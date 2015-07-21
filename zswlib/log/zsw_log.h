@@ -8,6 +8,8 @@
 #include <memory>
 #include <map>
 #include <vector>
+#include <time.h>
+#include <boost/foreach.hpp>
 
 #define ZSW_LOG_ACTIVE
 
@@ -17,7 +19,7 @@ namespace zsw{
     CERR = 2
   };
 
-  class CompositOstream final {
+  class CompositOstream {
   public:
   CompositOstream(int standard_output=0) :standard_output_(standard_output) {}
 
@@ -35,7 +37,7 @@ namespace zsw{
 
     template <typename T>
       CompositOstream& operator<<(const T& t) {
-      for(std::shared_ptr<std::ostream>& os : oss_) {
+      BOOST_FOREACH(std::shared_ptr<std::ostream>& os, oss_) {
         (*os) << t;
       }
       if(standard_output_ & STANDARD_OUTPUT::COUT) {
@@ -49,7 +51,7 @@ namespace zsw{
 
     CompositOstream& operator<<(std::ostream& (*__pf)(std::ostream&))
       {
-        for(std::shared_ptr<std::ostream>& os : oss_) {
+        BOOST_FOREACH(std::shared_ptr<std::ostream>& os, oss_) {
           __pf(*os);
         }
         if(standard_output_ & STANDARD_OUTPUT::COUT) {
