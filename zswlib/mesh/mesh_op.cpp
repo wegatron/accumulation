@@ -4,7 +4,7 @@
 #include <boost/assert.hpp>
 #include <zswlib/mesh/mesh_op.h>
 
-void zsw::mesh::rRingVertex(const zsw::mesh::TriMesh &tm, std::vector<zsw::FakeSet<size_t>> &ring, size_t r)
+void zsw::mesh::rRingVertex(const zsw::mesh::TriMesh &trimesh, const size_t r, std::vector<zsw::FakeSet<size_t>> &ring)
 {
   BOOST_VERIFY_MSG(r>0, "rRing vertex r should > 0!");
   ring.clear();  ring.resize(tm.n_vertices());

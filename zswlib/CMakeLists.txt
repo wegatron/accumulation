@@ -39,7 +39,7 @@ set(OPENMESH_LIBRARIES E:/usr/Windows/64/vc2010/OpenMesh/Core/bin/OpenMeshCore.l
 # add_subdirectory(log)
 
 file(GLOB common_headers *.h)
-file(GLOB mesh_headers mesh/*.h)
+file(GLOB mesh_headers mesh/*.h io/*.h)
 file(GLOB mesh_src mesh/*.cpp)
 
 add_library(zswlib SHARED ${mesh_src} log/zsw_log.cpp)

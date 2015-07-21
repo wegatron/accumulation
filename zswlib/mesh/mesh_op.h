@@ -8,7 +8,7 @@
 namespace zsw
 {
   namespace mesh {
-    void ZSW_API rRingVertex(const zsw::mesh::TriMesh &trimesh, std::vector<zsw::FakeSet<size_t>> &ring, size_t r);
+    void ZSW_API rRingVertex(const zsw::mesh::TriMesh &trimesh, const size_t r, std::vector<zsw::FakeSet<size_t>> &ring);
   }
 }
 
