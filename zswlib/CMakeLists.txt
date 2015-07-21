@@ -21,9 +21,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp")
 ##FIND_PACKAGE
 ###
 
-# set(FLANN_ROOT E:/3rd_install/flann)
-# find_package(Flann REQUIRED)
-# include_directories(${FLANN_INCLUDE_DIRS})
+set(FLANN_ROOT E:/3rd_install/flann)
+find_package(Flann REQUIRED)
+include_directories(${FLANN_INCLUDE_DIRS})
 
 find_package(Eigen3 REQUIRED)
 if(EIGEN3_FOUND)
