@@ -47,10 +47,10 @@ target_link_libraries(zswlib ${OPENMESH_LIBRARIES})
 
 # aux_source_directory_with_headers(. sources headers)
 
-install(FILES ${common_headers}
+install(FILES ${common_headers} log/zsw_log.h
   DESTINATION include/zswlib)
 
-install(FILES ${mesh_headers} log/zsw_log.h
+install(FILES ${mesh_headers}
   DESTINATION include/zswlib/mesh)
 
 geo_sim_sdk_install_cxx(TARGETS zswlib)
