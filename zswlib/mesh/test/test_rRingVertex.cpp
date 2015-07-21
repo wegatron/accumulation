@@ -1,7 +1,7 @@
 #include <iostream>
 #include <boost/foreach.hpp>
 #include <OpenMesh/Core/IO/MeshIO.hh>
-#include <zswlib/mesh_op.h>
+#include <zswlib/mesh/mesh_op.h>
 
 int main(int argc, char *argv[])
 {
