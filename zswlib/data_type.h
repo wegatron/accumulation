@@ -45,6 +45,39 @@ namespace zsw
     private:
       std::list<Scalar> data;
     };
+
+  template <typename Scalar>
+    class NthVector
+    {
+    public:
+      NthVector(size_t n, boost::function<bool (Scalar, Scalar)> pre_func) {
+        pre_func_ = pre_func;
+        n_ = n;
+      }
+      void insert(Scalar v) {
+        std::list<Scalar>::reverse_iterator it;
+        for(it=data.rbegin(); it!=data.rend();
+            ++it) {
+          if(!pre_func(v, *it)) { break; }
+        }
+        data.insert(it.base(), v);
+        if(data.size()>n_) { data.pop_back(); }
+      }
+
+      size_t size() const { return data.size(); }
+      zsw::Scalar getIthVal(size_t ith) {
+        if(ith >=n_ ) {
+          std::cerr << "can't get " << ith << " elementh, exceed " << n_ << std::endl;
+        }
+        std::list<Scalar>::iterator it = data.begin();
+        for(size_t i=0; i<ith; ++i) { ++it; }
+        return *it;
+      }
+    private:
+      size_t n_;
+      boost::function<bool (Scalar, Scalar)> pre_func_;
+      std::list<Scalar> data;
+    };
 }
 
 #endif /* DATA_TYPE_H */
