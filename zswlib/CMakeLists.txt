@@ -36,7 +36,6 @@ include_directories(E:/usr/Windows/64/vc2010)
 set(OPENMESH_LIBRARIES E:/usr/Windows/64/vc2010/OpenMesh/Core/bin/OpenMeshCore.lib)
 
 # add_subdirectory(mesh)
-# add_subdirectory(log)
 
 file(GLOB common_headers *.h)
 file(GLOB mesh_headers mesh/*.h io/*.h)
@@ -54,3 +53,5 @@ install(FILES ${mesh_headers}
   DESTINATION include/zswlib/mesh)
 
 geo_sim_sdk_install_cxx(TARGETS zswlib)
+
+add_subdirectory(test)

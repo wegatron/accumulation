@@ -75,6 +75,7 @@ namespace zsw
         return *it;
       }
       const std::list<Scalar> & getData() const { return data_; }
+      void clear() { data_.clear(); }
     private:
       size_t n_;
       boost::function<bool (Scalar, Scalar)> pre_func_;
