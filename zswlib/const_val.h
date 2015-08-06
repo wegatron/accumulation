@@ -3,8 +3,8 @@
 
 namespace zsw{
 	namespace const_val {
-		const double e = 2.71828;
-                const double eps = 1e-6;
+		const double e=2.7182818284590;
+                const double eps=1e-6;
 	}
 }
 

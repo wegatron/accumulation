@@ -4,6 +4,7 @@
 #include <list>
 #include <set>
 #include <boost/function.hpp>
+#include <Eigen/Dense>
 
 namespace zsw
 {
@@ -14,9 +15,10 @@ namespace zsw
       typedef typename std::list<Scalar>::const_iterator const_iterator;
       typedef typename std::list<Scalar>::iterator iterator;
       FakeSet() {}
-      void initFromSet(const std::set<Scalar> &in_set) {
+	  template<typename UNIQUE_CONTAINER>
+      void initFromSet(const UNIQUE_CONTAINER &in_set) {
         data_.resize(in_set.size());
-        std::copy(in_set.begin(), in_set.end(), data_.begin());
+        std::copy(in_set.cbegin(), in_set.cend(), data_.begin());
       }
       void insert(Scalar val)
       {
@@ -76,6 +78,10 @@ namespace zsw
       }
       const std::list<Scalar> & getData() const { return data_; }
       void clear() { data_.clear(); }
+      Scalar back() {
+        if(data_.size()>0) { return data_.back(); }
+        return 0;
+      }
     private:
       size_t n_;
       boost::function<bool (Scalar, Scalar)> pre_func_;
