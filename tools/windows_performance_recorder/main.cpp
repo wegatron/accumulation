@@ -58,8 +58,10 @@ int main(int argc, char* argv[])
 
 	std::cout << "exe_name:" << exe_name << std::endl;
 	std::cout << "time_elapse:" << time_elapse << " ms" << std::endl;
-	std::ofstream record_file("record.csv");
+	std::ofstream record_file("record_0.csv");
 	record_file << "memory(KB) , cpu_usage" << std::endl;
+	int record_count = 0;
+	int index = 1;
 	PROCESSENTRY32 entry;
 	entry.dwSize = sizeof(PROCESSENTRY32);
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
@@ -80,7 +82,18 @@ int main(int argc, char* argv[])
 					double tmp_usage = getCurrentValue();
 					std::cout << "cpu usage:" << tmp_usage << std::endl;
 					record_file << virtualMemUsedByMe << ", " << tmp_usage << std::endl;
-					record_file.flush();
+					++record_count;
+					if (record_count == 1000000)
+					{
+						record_file.close();
+						record_file.open("record_"+std::to_string(index)+".csv");
+						record_file << "memory(KB) , cpu_usage" << std::endl;
+						++index;
+					}
+					else
+					{
+						record_file.flush();
+					}
 					std::this_thread::sleep_for(std::chrono::milliseconds(time_elapse));
 				} while (true);
 				CloseHandle(hProcess);
