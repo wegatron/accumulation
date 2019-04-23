@@ -21,14 +21,16 @@ void test_1()
 void test_params_in_ptree()
 {
 	params_in_polygon params_ip;
-	params_ip.load("F:/tmp_zsw/area_param.json");
-	std::cout << params_ip.get_params_of(1.5, 0.5).get<float>("min_reg_sum_ratio", -1) << std::endl;
+	params_ip.load("F:/data/gz_system/grace/loc_zsw/params_in_polygon.json");
+	std::cout << params_ip.get_params_of(80.7, 257.89).get<float>("min_reg_sum_ratio", -1) << std::endl;
+	std::cout << params_ip.get_params_of(80.7, 257.89).get<float>("valid_deg_ratio_small_space", -1) << std::endl;
+	std::cout << params_ip.get_params_of(80.7, 257.89).get<float>("valid_deg_ratio_big_space", -1) << std::endl;
 }
 
 int main(int argc, char* argv[])
 {
-	test_0();
-	test_1();
+	// test_0();
+	// test_1();
 
 	test_params_in_ptree();
 	return 0;

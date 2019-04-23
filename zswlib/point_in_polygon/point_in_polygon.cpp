@@ -15,7 +15,7 @@ void point_in_polygon::set_polygon(std::vector<float>& x, std::vector<float>& y)
 		else if (x[i] < min_x_) min_x_ = x[i];
 
 		if (y[i] > max_y_) max_y_ = y[i];
-		else if (y[i] < min_y_) min_x_ = y[i];
+		else if (y[i] < min_y_) min_y_ = y[i];
 
 		if (y[j] == y[i]) {
 			constant_[i] = x[i];
@@ -32,6 +32,7 @@ void point_in_polygon::set_polygon(std::vector<float>& x, std::vector<float>& y)
 bool point_in_polygon::is_in_polygon(const float x, const float y)
 {
 	if (x < min_x_ || x > max_x_ || y < min_y_ || y> max_y_) return false;
+
 	bool oddNodes = false, current = poly_y_.back() > y, previous;
 	for (int i = 0; i < poly_y_.size(); i++) {
 		previous = current; current = poly_y_[i] > y;
