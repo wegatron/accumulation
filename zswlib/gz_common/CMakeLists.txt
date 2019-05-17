@@ -7,6 +7,7 @@ set(app_name gz_common)
 
 include($ENV{HOME}/usr/cmake_modules/cmake_self.cmake)
 include($ENV{HOME}/usr/cmake_modules/common.cmake)
+include(GenerateExportHeader)
 
 # 设置编译输出的路径
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/lib)
@@ -28,11 +29,17 @@ file(GLOB headers *.h *.hpp)
 file(GLOB src *.cpp)
 
 add_executable(${app_name}
+demo.cxx)
+
+add_library(gz_common
 ${headers}
 ${src}
 )
 
+generate_export_header(gz_common)
+
 target_link_libraries(${app_name}
+gz_common
 ${VTK_LIBRARIES}
 ${PCL_LIBRARIES}
 )
