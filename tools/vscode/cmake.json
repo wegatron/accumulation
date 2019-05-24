@@ -130,5 +130,16 @@
 			"include_directories(\\${VTK_INCLUDE_DIRS})",
 			"#\\${VTK_LIBRARIES}"
 		]
+	},
+	"openmp": {
+		"prefix": "find_openmp", 
+		"body": ["#for openmp",
+			"find_package(OpenMP)",
+			"if (OPENMP_FOUND)",
+    		"message(\"openmp enabled!!!\")",
+   			"set(CMAKE_C_FLAGS \"\\${CMAKE_C_FLAGS} \\${OpenMP_C_FLAGS}\")",
+    		"set(CMAKE_CXX_FLAGS \"\\${CMAKE_CXX_FLAGS} \\${OpenMP_CXX_FLAGS}\")",
+			"endif()"
+		]
 	}
 }

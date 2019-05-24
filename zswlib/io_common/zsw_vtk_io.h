@@ -11,7 +11,8 @@ namespace zsw{
 	IO_COMMON_EXPORT int point_clouds2vtk_file(const std::string &vtk_file, const std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> &points_clouds);
 
 	IO_COMMON_EXPORT int point_cloud2vtk_file(const std::string &vtk_file, const pcl::PointCloud<pcl::PointXYZ>::Ptr &pc,
-		const std::vector<std::pair<std::string, std::vector<float>>> attributes);
+		const std::vector<std::pair<std::string, std::vector<float>>> attributes,
+		const pcl::PointCloud<pcl::Normal>::Ptr normal = nullptr);
 
 	typedef Eigen::Matrix<double, 3, 3, Eigen::RowMajor> tensor_mat;
 

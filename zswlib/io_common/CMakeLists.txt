@@ -7,7 +7,10 @@ include(GenerateExportHeader)
 
 if(WIN32)
 include($ENV{HOME}/usr/cmake_modules/cmake_self.cmake)
-include($ENV{HOME}/usr/cmake_modules/common.cmake)
+# include($ENV{HOME}/usr/cmake_modules/common.cmake)
+
+set(CMAKE_DEBUG_POSTFIX d)
+set(CMAKE_RELEASE_POSTFIX "")
 endif(WIN32)
 
 # 设置编译输出的路径
@@ -31,6 +34,14 @@ find_package(Boost COMPONENTS  filesystem regex REQUIRED)
 add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
+
+#for openmp
+find_package(OpenMP)
+if (OPENMP_FOUND)
+message("openmp enabled!!!")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -62,10 +73,10 @@ ${Boost_LIBRARIES}
 
 if(WIN32)
 # 可执行程序的后缀需要额外设置
-set_target_properties(vtk_demo PROPERTIES
-DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
-RELEASE_POSTFIX ${CMAKE_RELEASE_POSTFIX}
-COMPILE_FLAGS "/MP")
+# set_target_properties(vtk_demo PROPERTIES
+# DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+# RELEASE_POSTFIX ${CMAKE_RELEASE_POSTFIX}
+# COMPILE_FLAGS "/MP")
 
 # configure the project to set some debug parameters in VS
 configure_file(${CMAKE_SOURCE_DIR}/vs.user.in vtk_demo.vcxproj.user)
