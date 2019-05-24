@@ -34,3 +34,4 @@ AC/input
 */doc/*.log
 */doc/*.aux
 */doc/*.pdf
+*_export.h

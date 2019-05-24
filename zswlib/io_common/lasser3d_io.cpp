@@ -47,10 +47,81 @@ namespace zsw_gz_common
 				ifs.read(&buff[0], 1); // is valid
 				ifs.read(&buff[1], 1); // remission
 				// if (buff[0] == 0) continue;
+				double squared_norm = tmp_pt.x * tmp_pt.x + tmp_pt.y * tmp_pt.y + tmp_pt.z * tmp_pt.z;
+				if (squared_norm < 0.125) continue;
 				pts_cloud->push_back(tmp_pt);
 			}
 		}
 		return pts_cloud;
+	}
+
+	pcl::PointCloud<pcl::PointXYZ>::Ptr load_pts_binary(const std::string& pc_file)
+	{
+		pcl::PointCloud<pcl::PointXYZ>::Ptr pts_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+		std::ifstream cloud_file;
+		cloud_file.open(pc_file, std::ios::binary);
+		if (cloud_file.is_open() == false) {
+			std::cout << "open cloud file fail!" << std::endl;
+			return nullptr;
+		}
+
+		std::string point_str;
+		bool if_get_binary_flag = false;
+		while (getline(cloud_file, point_str)) {
+			if (point_str == "#cloud_data_binary") {
+				if_get_binary_flag = true;
+				break;
+			}
+		}
+
+		if (if_get_binary_flag == false) {
+			cloud_file.close();
+			std::cout << "read cloud file binary " << pc_file << " fail!" << std::endl;
+			return nullptr;
+		}
+
+		while (true) {
+			float x, y, z;
+			unsigned char rssi;
+			cloud_file.read((char*)(&x), sizeof(float));
+			if (cloud_file.gcount() < sizeof(float)) {
+				break;
+			}
+			cloud_file.read((char*)(&y), sizeof(float));
+			if (cloud_file.gcount() < sizeof(float)) {
+				break;
+			}
+			cloud_file.read((char*)(&z), sizeof(float));
+			if (cloud_file.gcount() < sizeof(float)) {
+				break;
+			}
+			cloud_file.read((char*)(&rssi), sizeof(unsigned char));
+			if (cloud_file.gcount() < sizeof(unsigned char)) {
+				break;
+			}
+			pcl::PointXYZ point;
+			point.x = x;  point.y = y;  point.z = z;
+			pts_cloud->points.push_back(point);
+		}
+
+		cloud_file.close();
+		std::cout << "read cloud file binary " << pc_file << " success! point size " << pts_cloud->points.size() << std::endl;
+		return pts_cloud;
+	}
+
+	void write_pts_binary(const std::string& pc_file, pcl::PointCloud<pcl::PointXYZ>& pc)
+	{
+		std::ofstream ofs(pc_file, std::ofstream::binary);
+		ofs << "#cloud_data_binary" << std::endl;
+		char rssi = 0;
+		for(const auto pt : pc.points)
+		{
+			ofs.write(reinterpret_cast<const char*>(&pt.x), sizeof(pt.x));
+			ofs.write(reinterpret_cast<const char*>(&pt.y), sizeof(pt.y));
+			ofs.write(reinterpret_cast<const char*>(&pt.z), sizeof(pt.z));
+			ofs.write(&rssi, sizeof(rssi));
+		}
+		ofs.close();
 	}
 
 

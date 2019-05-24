@@ -22,9 +22,11 @@
 			"",
 			"set(app_name $1)",
 			"",
+			"if(WIN32)",
 			"include(\\$ENV{HOME}/usr/cmake_modules/cmake_self.cmake)",
 			"include(\\$ENV{HOME}/usr/cmake_modules/common.cmake)",
 			"",
+			"endif(WIN32)",
 			"# 设置编译输出的路径",
 			"set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG \\${CMAKE_BINARY_DIR}/lib)",
 			"set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG \\${CMAKE_BINARY_DIR}/lib)",
@@ -45,6 +47,7 @@
 			"...",
 			")",
 			"",
+			"if(WIN32)",
 			"# 可执行程序的后缀需要额外设置",
 			"set_target_properties(\\${app_name} PROPERTIES",
 			"DEBUG_POSTFIX \\${CMAKE_DEBUG_POSTFIX}",
@@ -61,7 +64,71 @@
 			"install(TARGETS \\${app_name} RUNTIME DESTINATION .)",
 			"install(CODE ",
 			"\"include(BundleUtilities)",
-			"fixup_bundle(\\${CMAKE_INSTALL_PREFIX}/\\${app_name}\\${CMAKE_RELEASE_POSTFIX}.exe \\\"\\\" \\\"\\${path}\\\")\")\""
+			"fixup_bundle(\\${CMAKE_INSTALL_PREFIX}/\\${app_name}\\${CMAKE_RELEASE_POSTFIX}.exe \\\"\\\" \\\"\\${path}\\\")\")\"",
+			"endif(WIN32)"
+		]
+	},
+	"find_opencv" : {
+		"prefix": "find_opencv",
+		"body":["#opencv",
+				"find_package(OpenCV REQUIRED)",
+				"include_directories(\\${OpenCV_INCLUDE_DIRS})",
+				"#\\${OpenCV_LIBS}"
+			]
+	},
+	"find_g2o": {
+		"prefix": "find_g2o",
+		"body":["#G2O",
+			"find_package(G2O REQUIRED)",
+			"include_directories(\\${G2O_INCLUDE_DIR})",
+			"include_directories(\\${G2O_INCLUDE_DIR}/g2o/EXTERNAL/csparse)",
+			"#\\${G2O_LIBRARIES}"
+		]
+	},
+	"find_pcl": {
+		"prefix": "find_pcl",
+		"body":["#PCL",
+			"find_package(PCL 1.8 REQUIRED COMPONENTS common features filters kdtree ml octree registration io segmentation visualization)",
+			"include_directories(\\${PCL_INCLUDE_DIRS})",
+			"add_definitions(\\${PCL_DEFINITIONS})\\\"",
+			"\\${PCL_LIBRARIES}"
+		]
+	},
+	"find_boost": {
+		"prefix": "find_boost",
+		"body": ["#boost",
+			"find_package(Boost COMPONENTS  filesystem REQUIRED)",
+			"add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)",
+			"include_directories(\\${Boost_INCLUDE_DIRS})",
+			"link_directories(\\${Boost_LIBRARY_DIRS})",
+			"#\\${Boost_LIBRARIES}"
+		]
+	},
+	"eigen": {
+		"prefix": "find_eigen",
+		"body": ["#eigen",
+			"include_directories(\\${EIGEN_INCLUDE_DIRS})"
+		]
+	},
+	"qt": {
+		"prefix": "find_qt",
+		"body": ["#qt",
+			"find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)",
+			"#Qt5::Core Qt5::Gui Qt5::Widgets"
+		]
+	},
+	"flann": {
+		"prefix": "find_flann",
+		"body": ["#flann",
+			"find_package(FLANN REQUIRED)",
+			"include_directories(\\${FLANN_INCLUDE_DIRS})"
+		]
+	},
+	"vtk": {
+		"prefix": "find_vtk",
+		"body": ["find_package(VTK REQUIRED)",
+			"include_directories(\\${VTK_INCLUDE_DIRS})",
+			"#\\${VTK_LIBRARIES}"
 		]
 	}
 }
