@@ -3,6 +3,7 @@
 #include <boost/regex.hpp>
 #include <boost/filesystem/path.hpp>
 #include <fstream>
+#include <queue>
 
 namespace zsw_gz_common
 {
@@ -48,7 +49,7 @@ namespace zsw_gz_common
 				ifs.read(&buff[1], 1); // remission
 				// if (buff[0] == 0) continue;
 				double squared_norm = tmp_pt.x * tmp_pt.x + tmp_pt.y * tmp_pt.y + tmp_pt.z * tmp_pt.z;
-				if (squared_norm < 0.125) continue;
+				if (squared_norm < 0.125 || squared_norm>40000) continue;
 				pts_cloud->push_back(tmp_pt);
 			}
 		}
@@ -125,10 +126,42 @@ namespace zsw_gz_common
 	}
 
 
+	std::vector<size_t> graph::nrv(const size_t v_index, const size_t n)
+	{
+		assert(v_index < adj_list_.size());
+		std::vector<size_t> ret;
+		std::queue<size_t> q; q.push(v_index);
+		size_t pivot = v_index;
+		size_t level = 0;
+		while(!q.empty())
+		{
+			size_t v = q.front(); q.pop();
+			ret.emplace_back(v);
+			for(size_t tmp_v : adj_list_[v])
+			{
+				q.push(tmp_v);
+			}
+			if (v == pivot) {
+				pivot = q.back();
+				if(++level > n) break;
+			}
+		}
+		return ret;
+	}
+
+	bool graph::add_edge(const size_t v0, const size_t v1)
+	{
+		if (adj_list_.size() < std::max(v0, v1)) return false;
+		adj_list_[v0].emplace_back(v1);
+		adj_list_[v1].emplace_back(v0);
+		return true;
+	}
+
 	int load_graph_nodes(const std::string& graph_file,
 		std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr>& laser_pcs,
-		std::vector<Eigen::Affine3f>& transforms)
+		std::vector<Eigen::Affine3f>& transforms, graph &g)
 	{
+		g.adj_list_.clear();
 		//// parse graph file
 		std::ifstream graph_ifs(graph_file);
 		if (!graph_ifs) { std::cerr << "error unable to open file:" << graph_file << std::endl; exit(__LINE__); }
@@ -139,6 +172,8 @@ namespace zsw_gz_common
 		std::string tmp_str;
 		Eigen::Affine3f r = Eigen::Affine3f::Identity();
 		Eigen::Affine3f t = Eigen::Affine3f::Identity();
+		size_t vi = 0;
+		size_t num_v = 0;
 		// Eigen::Affine3f laser3d_2_odo = Eigen::Affine3f::Identity();
 		while (!graph_ifs.eof())
 		{
@@ -157,6 +192,7 @@ namespace zsw_gz_common
 				r = Eigen::Affine3f(Eigen::AngleAxisf(radian_z, Eigen::Vector3f::UnitZ()) *
 					Eigen::AngleAxisf(radian_y, Eigen::Vector3f::UnitY()) *
 					Eigen::AngleAxisf(radian_x, Eigen::Vector3f::UnitX()));
+				++num_v;
 			}
 			else if (fields[0] == "laser3d_file_name")
 			{
@@ -164,6 +200,18 @@ namespace zsw_gz_common
 				pcl::PointCloud<pcl::PointXYZ>::Ptr laser3d_frame = load_laser3d_frame(laser3d_file);
 				laser_pcs.push_back(laser3d_frame);
 				transforms.push_back(t * r);
+			} else if(fields[0] == "node_i_vec_index")
+			{
+				if(num_v != 0)
+				{
+					g.adj_list_.resize(num_v);
+					num_v = 0;
+				}
+				vi = std::stoi(fields[1]);
+			} else if(fields[0] == "node_j_vec_index")
+			{
+				size_t vj = std::stoi(fields[1]);
+				g.add_edge(vi, vj);
 			}
 		}
 		return 0;

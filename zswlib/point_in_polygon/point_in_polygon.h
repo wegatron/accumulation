@@ -7,7 +7,7 @@
  * \brief judge if point is in an arbitrary polygon.
  * ref: http://alienryderflex.com/polygon/
  */
-class point_in_polygon final
+class point_in_polygon
 {
 public:
 	point_in_polygon() {}

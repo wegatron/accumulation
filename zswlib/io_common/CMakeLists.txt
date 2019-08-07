@@ -24,13 +24,18 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
 find_package(VTK REQUIRED)
 include_directories(${VTK_INCLUDE_DIRS})
 
+#for python
+find_package(PythonInterp REQUIRED)
+find_package(PythonLibs REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
+
 #PCL
 find_package(PCL 1.8 REQUIRED COMPONENTS common features filters kdtree ml octree registration io segmentation visualization)
 include_directories(${PCL_INCLUDE_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
 #boost
-find_package(Boost COMPONENTS  filesystem regex REQUIRED)
+find_package(Boost COMPONENTS  filesystem regex python37 REQUIRED)
 add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
@@ -70,6 +75,14 @@ ${VTK_LIBRARIES}
 ${PCL_LIBRARIES}
 ${Boost_LIBRARIES}
 )
+
+PYTHON_ADD_MODULE(zsw_py_io py_interface.cc)
+target_link_libraries(zsw_py_io
+io_common
+${VTK_LIBRARIES}
+${Boost_LIBRARIES}
+${PYTHON_LIBRARIES}
+${PCL_LIBRARIES})
 
 if(WIN32)
 # 可执行程序的后缀需要额外设置

@@ -1,0 +1,11 @@
+{
+    "params_in_polygon": [
+        {
+            "coord_x" : [79.6, 92.2, 96.8,68.8 ],
+            "coord_y" : [404.2, 407.2, 88.6, 87.7 ],
+            "min_reg_sum_ratio": 0.2,
+			"valid_deg_ratio_small_space":0.3,
+            "valid_deg_ratio_big_space":0.3
+        }
+    ]
+}

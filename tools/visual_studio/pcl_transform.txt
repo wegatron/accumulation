@@ -1,0 +1,2 @@
+#include <pcl/common/transforms.h>
+pcl::transformPointCloud(*pc, *pc_out, rt);

@@ -1,0 +1,4 @@
+for (auto& p : std::filesystem::directory_iterator(dir))
+{
+	const std::string file_name = p.path().filename().string();
+}

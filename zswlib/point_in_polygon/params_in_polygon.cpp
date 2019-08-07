@@ -27,18 +27,3 @@ bool params_in_polygon::load(const std::string& jsson_file)
 		pips_.emplace_back(poly_x, poly_y);
 	}
 }
-
-boost::property_tree::ptree params_in_polygon::get_params_of(const float x, const float y)
-{
-	int index = 0;
-	for(int i=0; i< pips_.size(); ++i)
-	{
-		if(pips_[i].is_in_polygon(x, y))
-		{
-			return params_pt_[i];
-		}
-	}
-	// empty ptree
-	boost::property_tree::ptree pt;
-	return pt;
-}
