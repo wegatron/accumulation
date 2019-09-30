@@ -1,0 +1,24 @@
+if(${CMAKE_SIZEOF_VOID_P} MATCHES "8" AND ${MSVC_VERSION} MATCHES "1916")
+    set(ZSW_LIB_DIR "$ENV{HOME}/usr/zsw_lib")
+elseif(${CMAKE_SIZEOF_VOID_P} MATCHES "4" AND ${MSVC_VERSION} MATCHES "1800")
+    set(ZSW_LIB_DIR "$ENV{HOME}/usr/win32/zsw_lib")
+endif(${CMAKE_SIZEOF_VOID_P} MATCHES "8" AND ${MSVC_VERSION} MATCHES "1916")
+
+message(${ZSW_LIB_DIR}!!!${MSVC_VERSION})
+
+find_path(ZSW_LIB_INCLUDE_DIR zsw_vtk_io.h
+${ZSW_LIB_DIR}/include
+)
+
+find_library(ZSW_LIBRARIES_DEBUG
+NAMES io_commond
+PATHS
+${ZSW_LIB_DIR}/lib)
+
+find_library(ZSW_LIBRARIES_RELEASE
+NAMES io_common
+PATHS
+${ZSW_LIB_DIR}/lib
+)
+
+set(ZSW_LIBRARIES optimized;${ZSW_LIBRARIES_RELEASE};debug;${ZSW_LIBRARIES_DEBUG})
