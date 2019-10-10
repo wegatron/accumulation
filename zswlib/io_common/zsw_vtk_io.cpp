@@ -6,6 +6,7 @@
 #include <vtkDoubleArray.h>
 #include <vtkIntArray.h>
 #include <vtkCellData.h>
+#include <vtkCellArray.h>
 #include <vtkPointData.h>
 #include <vtkPolyDataWriter.h>
 
