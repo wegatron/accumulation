@@ -1,6 +1,7 @@
 #include "zsw_vtk_io.h"
 
 #include <boost/graph/adjacency_list.hpp>
+#include "lasser3d_io.h"
 
 int main(int argc, char* argv[])
 {
@@ -23,5 +24,7 @@ int main(int argc, char* argv[])
 	// 	pts,
 	// 	"demo_ellipsoid",
 	// 	tensor_data);
+	auto ret = zsw_gz_common::load_laser3d_reg_data("F:/data/gz_3dloc_problem/2019.8.30_kaufaqu/log/OffData-20190829T064037/debug/P_0_000023_4295.00.bin");
+	zsw::point_cloud2vtk_file("f:/data/tmp/debug.vtk", ret->pc_, {});
 	return 0;
 }

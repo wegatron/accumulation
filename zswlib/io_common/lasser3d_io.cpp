@@ -110,6 +110,82 @@ namespace zsw_gz_common
 		return pts_cloud;
 	}
 
+	std::shared_ptr<laser3d_reg_data> load_laser3d_reg_data(const std::string& laser3d_reg_data_file)
+	{
+		std::ifstream ifs(laser3d_reg_data_file, std::ifstream::binary);
+		if(!ifs) return nullptr;
+		std::string tmp_str;
+		std::shared_ptr<laser3d_reg_data> ret(new laser3d_reg_data);
+		ret->pc_.reset(new pcl::PointCloud<pcl::PointXYZ>);
+		std::vector<std::string> fields;
+		std::vector<float> channel_radius;
+		std::vector<float> cos_ch;
+		std::vector<float> sin_ch;
+		int horizontal_num = 0;
+		double dis_resolution = 0;
+		const boost::regex word_regx("\\s+");
+		while(std::getline(ifs, tmp_str))
+		{
+			fields.clear();
+			boost::regex_split(std::back_inserter(fields), tmp_str, word_regx);
+			if(fields.empty()) continue;
+			if(fields[0] == "#data_binary") break;
+			if(fields[0] == "#channel_deg")
+			{
+				for(int i=1; i<fields.size(); ++i) {
+					channel_radius.emplace_back(std::stof(fields[i])*M_PI/180);
+					cos_ch.emplace_back(cos(channel_radius.back()));
+					sin_ch.emplace_back(sin(channel_radius.back()));
+				}
+			} else if(fields[0] == "#horizontal_num")
+			{
+				horizontal_num = std::stoi(fields[1]);
+			} else if(fields[0] == "#dis_resolution")
+			{
+				dis_resolution = std::stof(fields[1]);
+			}
+			else if (fields[0] == "#M" && fields.size() == 8)
+			{
+				if (fields[1] == "init")
+				{
+					Eigen::Translation3f t(std::stof(fields[2]), std::stof(fields[3]), std::stof(fields[4]));
+					Eigen::AngleAxisf rz(std::stof(fields[5]) / 180 * M_PI, Eigen::Vector3f::UnitZ()); // yaw
+					Eigen::AngleAxisf ry(std::stof(fields[6]) / 180 * M_PI, Eigen::Vector3f::UnitY()); // pitch
+					Eigen::AngleAxisf rx(std::stof(fields[7]) / 180 * M_PI, Eigen::Vector3f::UnitX()); // roll
+					ret->init_rt = (t * Eigen::Affine3f(rz * ry * rx)).matrix();
+				}
+				else if (fields[1] == "registration")
+				{
+					Eigen::Translation3f t(std::stof(fields[2]), std::stof(fields[3]), std::stof(fields[4]));
+					Eigen::AngleAxisf rz(std::stof(fields[5]) / 180 * M_PI, Eigen::Vector3f::UnitZ());
+					Eigen::AngleAxisf ry(std::stof(fields[6]) / 180 * M_PI, Eigen::Vector3f::UnitY());
+					Eigen::AngleAxisf rx(std::stof(fields[7]) / 180 * M_PI, Eigen::Vector3f::UnitX());
+					ret->reg_rt = (t * Eigen::Affine3f(rz*ry*rx)).matrix();
+				}
+			}
+		}
+		for(int i=0; i<horizontal_num; ++i)
+		{
+			float horizontal_deg = 0;
+			ifs.read(reinterpret_cast<char*>(&horizontal_deg), sizeof(horizontal_deg));
+			float hradius = horizontal_deg * M_PI / 180;
+			float cos_hr = cos(hradius);
+			float sin_hr = sin(hradius);
+			for(int ci=0; ci<channel_radius.size(); ++ci)
+			{
+				unsigned short int dis = 0;
+				ifs.read(reinterpret_cast<char*>(&dis), sizeof(dis));
+				float r_dis = dis * dis_resolution;
+				float z = sin_ch[ci] * r_dis;
+				float l = cos_ch[ci] * r_dis;
+				float x = cos_hr * l;
+				float y = sin_hr * l;
+				ret->pc_->push_back(pcl::PointXYZ(x, y, z));
+			}
+		}
+		return ret;
+	}
+
 	void write_pts_binary(const std::string& pc_file, pcl::PointCloud<pcl::PointXYZ>& pc)
 	{
 		std::ofstream ofs(pc_file, std::ofstream::binary);
@@ -183,8 +259,6 @@ namespace zsw_gz_common
 			if (fields.size() < 2) continue;
 			else if (fields[0] == "pose3d")
 			{
-				Eigen::Affine3f tt;
-				tt = Eigen::Translation3f(Eigen::Vector3f(0, 0, 0));
 				t = Eigen::Translation3f(Eigen::Vector3f(stof(fields[1]), stof(fields[2]), stof(fields[3])));
 				const float radian_z = std::stof(fields[4]) / 180.0f * 3.1415926; // yaw
 				const float radian_y = std::stof(fields[5]) / 180.0f * 3.1415926; // pitch

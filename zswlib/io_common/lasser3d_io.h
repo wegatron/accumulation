@@ -19,6 +19,13 @@ namespace zsw_gz_common
 		std::vector<std::list<size_t>> adj_list_;
 	};
 
+	struct IO_COMMON_EXPORT laser3d_reg_data
+	{
+		pcl::PointCloud<pcl::PointXYZ>::Ptr pc_;
+		Eigen::Matrix4f init_rt;
+		Eigen::Matrix4f reg_rt;
+	};
+
 	/**
 	 * \brief load laser frame with pose, from 'graph_*.txt'
 	 * \param graph_file file path of `graph_*.txt`
@@ -37,6 +44,8 @@ namespace zsw_gz_common
 	IO_COMMON_EXPORT pcl::PointCloud<pcl::PointXYZ>::Ptr load_laser3d_frame(const std::string &laser3d_file);
 
 	IO_COMMON_EXPORT pcl::PointCloud<pcl::PointXYZ>::Ptr load_pts_binary(const std::string &pc_file);
+
+	IO_COMMON_EXPORT std::shared_ptr<laser3d_reg_data>  load_laser3d_reg_data(const std::string &laser3d_reg_data_file);
 
 	IO_COMMON_EXPORT void write_pts_binary(const std::string &pc_file, pcl::PointCloud<pcl::PointXYZ> &pc);
 }
