@@ -30,5 +30,8 @@ namespace zsw{
 		const std::string &attribute_name,
 		const std::vector<tensor_mat, Eigen::aligned_allocator<tensor_mat>> &tensor_data);
 
+	IO_COMMON_EXPORT int point_cloud2vtk_file2(const std::string &vtk_file, const pcl::PointCloud<pcl::PointXYZ>::Ptr &pc,
+		const std::vector<std::tuple<std::string, int, std::vector<float>>> attributes,
+		const pcl::PointCloud<pcl::Normal>::Ptr normal = nullptr);
 }
 #endif //ZSW_VTK_IO_H
