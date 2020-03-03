@@ -35,3 +35,5 @@ AC/input
 */doc/*.aux
 */doc/*.pdf
 *_export.h
+tools/evo_wrapper/data
+.idea

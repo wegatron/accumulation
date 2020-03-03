@@ -43,7 +43,7 @@ def log_statics():
     return info_pd
 
 
-def compare_plot(alg_names, statics):
+def compare_plot(alg_names, statics, xlabel):
     attrs = statics[0].columns
     attr_n = len(attrs)
     alg_n = len(alg_names)
@@ -57,6 +57,9 @@ def compare_plot(alg_names, statics):
         attr_cp_pd.to_csv('./data/'+attrs[attr_i]+'.csv')
         attr_cp_pd.plot(linewidth=0.7)
         plt.title(attrs[attr_i])
+        plt.ylabel('error')
+        plt.xlabel(xlabel)
+        plt.grid(True)
         plt.savefig('./data/'+attrs[attr_i]+'.png', quality=100, dpi=300)
         plt.close()
 
@@ -67,16 +70,16 @@ if __name__ == '__main__':
     for i in range(0, 21):
         noise_sigma.append(i * 0.4)
 
-    run_evo('evo_rpe tum -as ./data/frame_traj_gt.txt ./data/F/frame_traj_est_F_', 'noise', noise_sigma)
+    # run_evo('evo_rpe tum -as ./data/frame_traj_gt.txt ./data/F/frame_traj_est_F_', 'noise', noise_sigma)
 
     F_rt_statics = log_statics()
 
-    run_evo('evo_rpe tum -as ./data/frame_traj_gt.txt ./data/frame_traj_est_E_', 'noise', noise_sigma)
+    # run_evo('evo_rpe tum -as ./data/frame_traj_gt.txt ./data/frame_traj_est_E_', 'noise', noise_sigma)
 
     E_rt_statics = log_statics()
 
     # compare
-    compare_plot(['rt_by_F', 'rt_by_E'], [F_rt_statics, E_rt_statics])
+    compare_plot(['rt_by_F', 'rt_by_E'], [F_rt_statics, E_rt_statics], 'noise(pixel_sigma)')
 
 
 
