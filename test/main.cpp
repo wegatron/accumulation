@@ -1,19 +1,10 @@
-#include <stdexcept>
-
-#include "../error_ctrl.h"
-
-using namespace std;
-
-#define OK 0
-
-int func2()
-{
-  return 1;
-}
+#include <boost/filesystem.hpp>
+#include <iostream>
 
 int main(int argc, char *argv[])
 {
-  CALL_FUNC(func2(), throw runtime_error("this is run time error"));
-  cout << func2() << endl;
+  boost::filesystem::path p("/media/wegatron/data/workspace/accumulation/test/tmp.txt");
+  if(boost::filesystem::exists(p))
+    std::cout << "exist" << std::endl;
   return 0;
 }
