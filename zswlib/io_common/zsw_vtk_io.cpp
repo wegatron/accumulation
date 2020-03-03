@@ -122,3 +122,60 @@ int zsw::tensor2vtk_file(const std::string& vtk_file,
 	poly_data_writer->SetFileTypeToBinary();
 	return poly_data_writer->Write();
 }
+
+int zsw::point_cloud2vtk_file2(const std::string& vtk_file, 
+	const pcl::PointCloud<pcl::PointXYZ>::Ptr& pc,
+	const std::vector<std::tuple<std::string, int, std::vector<float>>> attributes,
+	const pcl::PointCloud<pcl::Normal>::Ptr normal)
+{
+	vtkSmartPointer<vtkPoints> points_data = vtkSmartPointer<vtkPoints>::New();
+	vtkSmartPointer<vtkPolyData> vtk_points_cloud = vtkSmartPointer<vtkPolyData>::New();
+	vtkSmartPointer<vtkCellArray> vertices = vtkSmartPointer<vtkCellArray>::New();
+
+	for (const auto &point : pc->points)
+	{
+		const auto id = points_data->InsertNextPoint(point.x, point.y, point.z);
+		vertices->InsertNextCell(1);
+		vertices->InsertCellPoint(id);
+	}
+
+	vtk_points_cloud->SetPoints(points_data);
+	vtk_points_cloud->SetVerts(vertices);
+
+	for (const auto &attrib_data : attributes)
+	{
+		vtkSmartPointer<vtkFloatArray> tmp_attrib = vtkSmartPointer<vtkFloatArray>::New();
+		tmp_attrib->SetName(std::get<0>(attrib_data).c_str());
+		const auto &values = std::get<2>(attrib_data);
+		assert(values.size() == pc->size()*std::get<1>(attrib_data));
+
+		const auto num_ele = std::get<1>(attrib_data);
+		tmp_attrib->SetNumberOfComponents(num_ele);
+		tmp_attrib->SetNumberOfTuples(values.size()/num_ele);
+		for (auto ind=0; ind<values.size(); ind+=num_ele)
+		{
+			//tmp_attrib->InsertNextTuple(values.data()+ind);
+			tmp_attrib->SetTuple(ind/3, values.data()+ind);
+		}
+		vtk_points_cloud->GetPointData()->AddArray(tmp_attrib);
+	}
+
+	if (normal != nullptr)
+	{
+		assert(normal->points.size() == pc->points.size());
+		vtkSmartPointer<vtkFloatArray> vtk_normals = vtkSmartPointer<vtkFloatArray>::New();
+		vtk_normals->SetNumberOfComponents(3);
+		for (const auto tmp_normal : normal->points)
+		{
+			vtk_normals->InsertNextTuple3(tmp_normal.normal_x, tmp_normal.normal_y, tmp_normal.normal_z);
+		}
+		vtk_points_cloud->GetCellData()->SetNormals(vtk_normals);
+	}
+
+	// write out
+	static vtkSmartPointer<vtkPolyDataWriter> poly_data_writer = vtkSmartPointer<vtkPolyDataWriter>::New();
+	poly_data_writer->SetInputData(vtk_points_cloud);
+	poly_data_writer->SetFileName(vtk_file.c_str());
+	poly_data_writer->SetFileTypeToBinary();
+	return poly_data_writer->Write();
+}
