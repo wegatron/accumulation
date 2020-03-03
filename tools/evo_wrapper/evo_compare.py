@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 
 
 def run_evo(system_call, param_name, param_values, debug=True):
-    os.system('rm log.txt')
+    os.system('rm ./data/log.txt')
     for pv in param_values:
         if debug:
-            print(system_call+str(pv)+'.txt >> ./data/log.txt')
-        os.system(system_call+str(pv)+'.txt')
+            print(system_call+pv+'.txt >> ./data/log.txt')
+        os.system(system_call+pv+'.txt >> ./data/log.txt')
 
 
 def log_statics():
@@ -66,15 +66,14 @@ def compare_plot(alg_names, statics, xlabel):
 
 if __name__ == '__main__':
     noise_sigma = []
-
     for i in range(0, 21):
-        noise_sigma.append(i * 0.4)
+        noise_sigma.append("{0:.2f}".format(i * 0.4))
 
-    # run_evo('evo_rpe tum -as ./data/frame_traj_gt.txt ./data/F/frame_traj_est_F_', 'noise', noise_sigma)
+    run_evo('evo_rpe tum -as ./data/traj/frame_traj_gt.txt ./data/traj/frame_traj_est_F_', 'noise', noise_sigma)
 
     F_rt_statics = log_statics()
 
-    # run_evo('evo_rpe tum -as ./data/frame_traj_gt.txt ./data/frame_traj_est_E_', 'noise', noise_sigma)
+    run_evo('evo_rpe tum -as ./data/traj/frame_traj_gt.txt ./data/traj/frame_traj_est_E_', 'noise', noise_sigma)
 
     E_rt_statics = log_statics()
 
