@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "2BA1A07B-6FE1-41C1-8701-DAE380D045DD"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5C7E0A1E-0A50-4920-A702-B32B220C448B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../kiwi/backend/metal/metal_command_buffer.mm"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "84"
+            endingLineNumber = "84"
+            landmarkName = "MetalCommandBuffer::commitAndWaitFinish()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B833D7B9-012B-4B63-BFE3-17BFE44CB7A6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../kiwi/backend/metal/metal_command_buffer.mm"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "373"
+            endingLineNumber = "373"
+            landmarkName = "MetalCommandBuffer::doEncoding()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B833D7B9-012B-4B63-BFE3-17BFE44CB7A6 - 7f092ec92dcd93cb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "kiwi::backend::MetalCommandBuffer::doEncoding()"
+                  moduleName = "TextureQuad"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/wegatron/workspace/kiwi/kiwi/backend/metal/metal_command_buffer.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "373"
+                  endingLineNumber = "373"
+                  offsetFromSymbolStart = "7614">
+               </Location>
+               <Location
+                  uuid = "B833D7B9-012B-4B63-BFE3-17BFE44CB7A6 - 7f092ec92dcd93cb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "kiwi::backend::MetalCommandBuffer::doEncoding()"
+                  moduleName = "TextureQuad"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/wegatron/workspace/kiwi/kiwi/backend/metal/metal_command_buffer.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "373"
+                  endingLineNumber = "373"
+                  offsetFromSymbolStart = "7626">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
