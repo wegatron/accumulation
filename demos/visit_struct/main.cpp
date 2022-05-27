@@ -11,17 +11,12 @@ struct my_type {
 
 VISITABLE_STRUCT(my_type, a, b, c);
 
-
-
-struct debug_printer {
-  template <typename T>
-  void operator()(const char * name, const T & value) {
-    std::cerr << name << ": " << value << std::endl;
-  }
-};
-
-void debug_print(const my_type & my_struct) {
-  visit_struct::for_each(my_struct, debug_printer{});
+template<typename T>
+void debug_print(const T & my_struct) {
+  visit_struct::for_each(my_struct,
+    [](const char * name, const auto & value) {
+      std::cerr << name << ": " << value << std::endl;
+    });
 }
 
 int main(int argc, char const *argv[])
