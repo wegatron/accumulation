@@ -19,6 +19,8 @@
 		63E77A181ED2059A00E1E542 /* AAPLShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A3532871E99974500C194AD /* AAPLShaders.metal */; };
 		63E77A1A1ED205A200E1E542 /* AAPLShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 3A3532871E99974500C194AD /* AAPLShaders.metal */; };
 		76202960283F768D00D336D2 /* app.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7620295F283F768D00D336D2 /* app.mm */; };
+		7620296B283F887A00D336D2 /* fullscreen_pass.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7620296A283F887900D336D2 /* fullscreen_pass.mm */; };
+		7620296C283F887A00D336D2 /* fullscreen_pass.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7620296A283F887900D336D2 /* fullscreen_pass.mm */; };
 		CD832B25275A0054002900A7 /* AAPLRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = CD832B24275A0054002900A7 /* AAPLRenderer.mm */; };
 /* End PBXBuildFile section */
 
@@ -27,7 +29,7 @@
 		3A1F1B411F0338CF001622B3 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = ../../../../AppleTVOS.platform/Developer/SDKs/AppleTVOS11.0.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		3A3532841E99974500C194AD /* AAPLRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AAPLRenderer.h; sourceTree = "<group>"; };
 		3A3532861E99974500C194AD /* AAPLShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AAPLShaderTypes.h; sourceTree = "<group>"; };
-		3A3532871E99974500C194AD /* AAPLShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = AAPLShaders.metal; sourceTree = "<group>"; };
+		3A3532871E99974500C194AD /* AAPLShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = AAPLShaders.metal; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.metal; };
 		3A35328F1E99974500C194AD /* TextureQuad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TextureQuad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A3532931E99974500C194AD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3A35329B1E99974500C194AD /* AAPLViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AAPLViewController.h; sourceTree = "<group>"; };
@@ -43,6 +45,9 @@
 		7620295E283F767100D336D2 /* app.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = app.h; sourceTree = "<group>"; };
 		7620295F283F768D00D336D2 /* app.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = app.mm; sourceTree = "<group>"; };
 		76202961283F7A2600D336D2 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
+		76202969283F887300D336D2 /* fullscreen_pass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fullscreen_pass.h; sourceTree = "<group>"; };
+		7620296A283F887900D336D2 /* fullscreen_pass.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = fullscreen_pass.mm; sourceTree = "<group>"; };
+		76C1D4002840B7840025C399 /* visit_struct.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = visit_struct.hpp; sourceTree = "<group>"; };
 		907FE32A28789CDAFD777257 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		CD832B24275A0054002900A7 /* AAPLRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AAPLRenderer.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -99,6 +104,9 @@
 		3A3532831E99974500C194AD /* Renderer */ = {
 			isa = PBXGroup;
 			children = (
+				76C1D4002840B7840025C399 /* visit_struct.hpp */,
+				7620296A283F887900D336D2 /* fullscreen_pass.mm */,
+				76202969283F887300D336D2 /* fullscreen_pass.h */,
 				76202961283F7A2600D336D2 /* stb_image.h */,
 				7620295F283F768D00D336D2 /* app.mm */,
 				7620295E283F767100D336D2 /* app.h */,
@@ -252,6 +260,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7620296C283F887A00D336D2 /* fullscreen_pass.mm in Sources */,
 				63E77A181ED2059A00E1E542 /* AAPLShaders.metal in Sources */,
 				3A35329D1E99974500C194AD /* AAPLViewController.m in Sources */,
 				3A3532941E99974500C194AD /* main.m in Sources */,
@@ -264,6 +273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				76202960283F768D00D336D2 /* app.mm in Sources */,
+				7620296B283F887A00D336D2 /* fullscreen_pass.mm in Sources */,
 				3A1F1B3D1F033827001622B3 /* AAPLViewController.m in Sources */,
 				63E77A1A1ED205A200E1E542 /* AAPLShaders.metal in Sources */,
 				3A1F1B3E1F033846001622B3 /* main.m in Sources */,

@@ -1,7 +1,9 @@
 #ifndef KIWI_APP_H
 #define KIWI_APP_H
 
+#include <memory>
 #include <MetalKit/MetalKit.h>
+#include "fullscreen_pass.h"
 
 class App final {
 public:
@@ -28,15 +30,17 @@ private:
     
     App() = default;
     
+    std::unique_ptr<zsw::FullScreenPass> fullscreen_pass_;
+    
     size_t width_ = 0;
     size_t height_ = 0;
     
-    MTKView * view = nil;
+    MTKView * view_ = nil;
     id<MTLDevice> device_ = nil;
     id<MTLCommandQueue> cmd_queue_ = nil;
-    id<MTLBuffer> vb_ = nil;
     id<MTLTexture> texture_ = nil;
-    id<MTLRenderPipelineState> pipelineState_;
+    MTLRenderPassDescriptor * rpd_ = nil;
+
 };
 
 #endif // KIWI_APP_H
