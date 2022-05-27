@@ -33,8 +33,31 @@ void App::setupRenderPipeline()
     fullscreen_pass_->ps_parameters_.reset(new zsw::BasicFullScreenPSParameters);
     fullscreen_pass_->ps_parameters_->ts.binding = 1;
     
+    // image
+    NSString *img_path = [[NSBundle mainBundle] pathForResource:@"cat" ofType:@"png"];
+    const char *img_path_cstr = [img_path UTF8String];
     
-    fullscreen_pass_->ps_parameters_->ts.texture = ;
+    int img_width = 0;
+    int img_height = 0;
+    int tex_channels = 0;
+    stbi_uc *pixels = stbi_load(img_path_cstr, &img_width, &img_height, &tex_channels, 0);
+    assert(pixels != nullptr);
+    
+    MTLTextureDescriptor * texture_desc = [MTLTextureDescriptor new];
+    texture_desc.width = img_width;
+    texture_desc.height = img_height;
+    texture_desc.pixelFormat = MTLPixelFormatRGBA8Unorm;
+    fullscreen_pass_->ps_parameters_->ts.texture = [device_ newTextureWithDescriptor:texture_desc];
+    
+    [fullscreen_pass_->ps_parameters_->ts.texture replaceRegion:
+        MTLRegionMake2D(0, 0,
+        img_width, img_height)
+        mipmapLevel:0 slice:0
+        withBytes:pixels
+        bytesPerRow: img_width * 4
+        bytesPerImage: img_width * img_height * 4];
+    
+    STBI_FREE(pixels);
     
     MTLSamplerDescriptor *mtl_sampler_desc = [MTLSamplerDescriptor new];
     mtl_sampler_desc.minFilter = MTLSamplerMinMagFilterLinear;

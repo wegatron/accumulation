@@ -21,7 +21,7 @@ public:
         width_ = width;
         height_ = height;
     }
-    
+        
     void setupRenderPipeline();
     
     void renderOneFrame();

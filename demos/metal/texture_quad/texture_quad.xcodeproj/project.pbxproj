@@ -21,6 +21,8 @@
 		76202960283F768D00D336D2 /* app.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7620295F283F768D00D336D2 /* app.mm */; };
 		7620296B283F887A00D336D2 /* fullscreen_pass.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7620296A283F887900D336D2 /* fullscreen_pass.mm */; };
 		7620296C283F887A00D336D2 /* fullscreen_pass.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7620296A283F887900D336D2 /* fullscreen_pass.mm */; };
+		76C1D4022840DB400025C399 /* cat.png in Resources */ = {isa = PBXBuildFile; fileRef = 76C1D4012840DB400025C399 /* cat.png */; };
+		76C1D4032840DB400025C399 /* cat.png in Resources */ = {isa = PBXBuildFile; fileRef = 76C1D4012840DB400025C399 /* cat.png */; };
 		CD832B25275A0054002900A7 /* AAPLRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = CD832B24275A0054002900A7 /* AAPLRenderer.mm */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +50,7 @@
 		76202969283F887300D336D2 /* fullscreen_pass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fullscreen_pass.h; sourceTree = "<group>"; };
 		7620296A283F887900D336D2 /* fullscreen_pass.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = fullscreen_pass.mm; sourceTree = "<group>"; };
 		76C1D4002840B7840025C399 /* visit_struct.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = visit_struct.hpp; sourceTree = "<group>"; };
+		76C1D4012840DB400025C399 /* cat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat.png; sourceTree = "<group>"; };
 		907FE32A28789CDAFD777257 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		CD832B24275A0054002900A7 /* AAPLRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AAPLRenderer.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -93,6 +96,7 @@
 		3A35327E1E99974500C194AD = {
 			isa = PBXGroup;
 			children = (
+				76C1D4012840DB400025C399 /* cat.png */,
 				3A3532831E99974500C194AD /* Renderer */,
 				3A3532911E99974500C194AD /* Application */,
 				3AE289861EEA0A9100DF4C9A /* Frameworks */,
@@ -240,6 +244,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76C1D4032840DB400025C399 /* cat.png in Resources */,
 				3A3532A01E99974500C194AD /* Main.storyboard in Resources */,
 				3A3532A31E99974500C194AD /* LaunchScreen.storyboard in Resources */,
 			);
@@ -249,6 +254,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76C1D4022840DB400025C399 /* cat.png in Resources */,
 				3A3532CC1E99974500C194AD /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
